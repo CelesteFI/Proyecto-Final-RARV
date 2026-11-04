@@ -11,6 +11,17 @@ public sealed class VolumeCalculator : MonoBehaviour
     /// <summary>Altura fija del cilindro del holograma, en centimetros (eje Y).</summary>
     public const float CylinderHeightCm = 2.5f;
 
+    /// <summary>
+    /// Escala local del eje Y. El mesh Cylinder de Unity mide 2 unidades de alto y 1 de diametro;
+    /// con la convencion del proyecto (baseRadiusCm 50 sobre un radio de mesh 0.5, es decir
+    /// 1 unidad = 100 cm) la altura constante de 2.5 cm exige 2 * 0.0125 = 0.025 unidades.
+    /// Sin este valor el molde se renderiza 80 veces mas alto que el volumen calculado.
+    /// </summary>
+    public const float CylinderScaleY = 0.0125f;
+
+    /// <summary>Escala de respaldo: mantiene la altura constante aunque el calculo falle.</summary>
+    private static readonly Vector3 EscalaPorDefecto = new Vector3(1f, CylinderScaleY, 1f);
+
     [Header("Holograma (cilindro)")]
     [Tooltip("Radio del mesh del holograma a escala 1, en cm. Se toma del cilindro ya presente en la escena.")]
     [SerializeField, Min(0.0001f)] private float baseRadiusCm = 1f;
@@ -18,8 +29,8 @@ public sealed class VolumeCalculator : MonoBehaviour
     public float BaseRadiusCm => baseRadiusCm;
 
     /// <summary>
-    /// Devuelve la escala local (X y Z por radio, Y = 1). Si los datos no son validos
-    /// registra una advertencia y devuelve Vector3.one.
+    /// Devuelve la escala local (X y Z por radio, Y = CylinderScaleY). Si los datos no son
+    /// validos registra una advertencia y devuelve la escala por defecto.
     /// </summary>
     public Vector3 CalculateLocalScale(string foodName, bool isCooked, float grams)
     {
@@ -34,7 +45,7 @@ public sealed class VolumeCalculator : MonoBehaviour
     /// </summary>
     public bool TryCalculateLocalScale(string foodName, bool isCooked, float grams, out Vector3 localScale)
     {
-        localScale = Vector3.one;
+        localScale = EscalaPorDefecto;
 
         if (grams <= 0f)
         {
@@ -51,7 +62,7 @@ public sealed class VolumeCalculator : MonoBehaviour
         float radiusCm = RadiusFromVolume(MassToVolume(grams, density));
         float scaleXZ = radiusCm / baseRadiusCm;
 
-        localScale = new Vector3(scaleXZ, 1f, scaleXZ);
+        localScale = new Vector3(scaleXZ, CylinderScaleY, scaleXZ);
         return true;
     }
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using TMPro;
@@ -25,19 +26,21 @@ public sealed class BiometricProfile : MonoBehaviour
     private const float RepartoCarbohidrato = 0.40f;
     private const float RepartoGrasa = 0.30f;
 
+    /// <summary>Factores de actividad en el mismo orden que las opciones de DropdownActividad.</summary>
+    public static readonly IReadOnlyList<float> FactoresActividad = new[] { 1.2f, 1.375f, 1.55f, 1.725f, 1.9f };
+
     [Header("Entradas (TMP_InputField)")]
     [SerializeField] private TMP_InputField InputEdad;
     [SerializeField] private TMP_InputField InputPeso;
     [SerializeField] private TMP_InputField InputAltura;
-    [SerializeField] private TMP_InputField InputActividad;
+
+    [Header("Selecciones (TMP_Dropdown)")]
+    [SerializeField] private TMP_Dropdown DropdownSexo;      // 0 = Masculino, 1 = Femenino
+    [SerializeField] private TMP_Dropdown DropdownActividad; // indice dentro de FactoresActividad
 
     [Header("Interaccion y salida")]
     [SerializeField] private Button BtnCalcular;
     [SerializeField] private TMP_Text TextoResultados;
-
-    [Header("Termino de sexo de la formula")]
-    [Tooltip("Mifflin-St Jeor exige el termino +5 (masculino) o -161 (femenino).")]
-    [SerializeField] private Sexo sexo = Sexo.Masculino;
 
     [Header("Rangos de validacion")]
     [SerializeField] private Vector2 rangoEdad = new Vector2(10f, 120f);
@@ -71,12 +74,12 @@ public sealed class BiometricProfile : MonoBehaviour
         if (!TryLeer(InputEdad, "edad", rangoEdad, out float edad) ||
             !TryLeer(InputPeso, "peso (kg)", rangoPeso, out float peso) ||
             !TryLeer(InputAltura, "altura (cm)", rangoAltura, out float altura) ||
-            !TryLeer(InputActividad, "factor de actividad", rangoActividad, out float actividad))
+            !TryLeerSelectores(out Sexo sexoActual, out float actividad))
         {
             return;
         }
 
-        float tmb = CalcularTMB(peso, altura, edad, sexo);
+        float tmb = CalcularTMB(peso, altura, edad, sexoActual);
         float gastoTotal = tmb * actividad;
 
         float gramosProteina = gastoTotal * RepartoProteina / KcalPorGramoProteina;
@@ -99,6 +102,38 @@ public sealed class BiometricProfile : MonoBehaviour
     {
         float terminoSexo = sexo == Sexo.Masculino ? 5f : -161f;
         return (10f * pesoKg) + (6.25f * alturaCm) - (5f * edad) + terminoSexo;
+    }
+
+    /// <summary>Sexo y factor de actividad salen de los dropdowns (valor 0 por defecto).</summary>
+    private bool TryLeerSelectores(out Sexo sexoActual, out float actividad)
+    {
+        sexoActual = Sexo.Masculino;
+        actividad = 0f;
+
+        if (DropdownSexo == null || DropdownActividad == null)
+        {
+            Reportar("Falta asignar en el Inspector DropdownSexo o DropdownActividad.");
+            return false;
+        }
+
+        sexoActual = DropdownSexo.value == (int)Sexo.Femenino ? Sexo.Femenino : Sexo.Masculino;
+
+        int indice = DropdownActividad.value;
+        if ((uint)indice >= (uint)FactoresActividad.Count)
+        {
+            Reportar("Selecciona un factor de actividad valido.");
+            return false;
+        }
+
+        actividad = FactoresActividad[indice];
+
+        if (actividad < rangoActividad.x || actividad > rangoActividad.y)
+        {
+            Reportar($"factor de actividad fuera de rango: {actividad} (permitido {rangoActividad.x}-{rangoActividad.y}).");
+            return false;
+        }
+
+        return true;
     }
 
     private bool TryLeer(TMP_InputField input, string etiqueta, Vector2 rango, out float valor)
@@ -150,7 +185,8 @@ public sealed class BiometricProfile : MonoBehaviour
         valido &= Validar(InputEdad, nameof(InputEdad));
         valido &= Validar(InputPeso, nameof(InputPeso));
         valido &= Validar(InputAltura, nameof(InputAltura));
-        valido &= Validar(InputActividad, nameof(InputActividad));
+        valido &= Validar(DropdownSexo, nameof(DropdownSexo));
+        valido &= Validar(DropdownActividad, nameof(DropdownActividad));
         valido &= Validar(BtnCalcular, nameof(BtnCalcular));
         valido &= Validar(TextoResultados, nameof(TextoResultados));
 
