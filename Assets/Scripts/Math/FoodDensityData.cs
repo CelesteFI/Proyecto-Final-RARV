@@ -40,7 +40,14 @@ public static class FoodDensityData
         new FoodDensity("Papa",        1.09f, 0.92f),
         new FoodDensity("Zanahoria",   1.04f, 0.96f),
         new FoodDensity("Brocoli",     0.38f, 0.34f),
-        new FoodDensity("Frijol",      0.80f, 1.00f)
+        new FoodDensity("Frijol",      0.80f, 1.00f),
+
+        // Slots 21-24 del catalogo: platos compuestos. No cambian de densidad al "cocinarse"
+        // porque ya se sirven preparados (crudo y cocido comparten valor).
+        new FoodDensity("Guiso de Pollo",    0.95f, 0.95f),
+        new FoodDensity("Sopa de Verduras",  0.90f, 0.90f),
+        new FoodDensity("Arroz con Pollo",   0.88f, 0.88f),
+        new FoodDensity("Ensalada Mixta",    0.45f, 0.45f)
     };
 
     private static readonly Dictionary<string, FoodDensity> Lookup = BuildLookup();

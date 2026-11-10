@@ -15,6 +15,7 @@ using UnityEngine.UI;
 public static class NutriAR_FinalUISetup
 {
     private const string MenuPath = "NutriAR/4. Refinar Interfaz (Carga y Menu Lateral)";
+    private const string MenuPathEstado = "NutriAR/5. Estado de Arranque Seguro (sin bloqueo de UI)";
     private const string UndoLabel = "NutriAR: Refinar Interfaz";
 
     private const string ManagersName = "AR_Managers";
@@ -80,6 +81,64 @@ public static class NutriAR_FinalUISetup
                   "Ctrl+Z revierte todo el proceso en un solo paso.", canvas);
     }
 
+    /// <summary>
+    /// Reaplica el estado de arranque seguro sin tocar la jerarquia: Panel_PantallaInicio visible,
+    /// el resto de paneles apagados, Panel_Carga activo (para que su desvanecido llegue a ejecutarse)
+    /// y su CanvasGroup sin interaccion ni raycasts. Idempotente y en un unico grupo de Undo.
+    /// </summary>
+    [MenuItem(MenuPathEstado)]
+    public static void AplicarEstadoArranqueSeguro()
+    {
+        Canvas canvas = Object.FindFirstObjectByType<Canvas>(FindObjectsInactive.Include);
+        if (canvas == null)
+        {
+            Debug.LogError("[NutriAR] No hay ningun Canvas en la escena.");
+            return;
+        }
+
+        int undoGroup = Undo.GetCurrentGroup();
+        Undo.SetCurrentGroupName(UndoLabel + ": estado de arranque");
+
+        AplicarEstadoInicial(canvas.transform);
+
+        Transform carga = FindDescendiente(canvas.transform, PanelCargaName);
+        if (carga == null)
+        {
+            Debug.LogWarning($"[NutriAR] No existe '{PanelCargaName}' en el Canvas: se omite su estado.");
+        }
+        else
+        {
+            CanvasGroup grupo = carga.GetComponent<CanvasGroup>();
+            if (grupo == null)
+            {
+                grupo = EnsureComponent<CanvasGroup>(carga.gameObject);
+            }
+
+            Undo.RecordObject(grupo, UndoLabel + ": CanvasGroup de carga");
+            // alpha 0 en la escena guardada: el panel es negro opaco a pantalla completa y,
+            // como ultimo hijo del Canvas, taparia TODA la interfaz en Edit Mode. PanelCarga.Start()
+            // lo sube a 1 en el primer frame de Play, antes de desvanecerse.
+            grupo.alpha = 0f;
+            grupo.interactable = false;
+            grupo.blocksRaycasts = false;
+            EditorUtility.SetDirty(grupo);
+
+            if (!carga.gameObject.activeSelf)
+            {
+                Undo.RecordObject(carga.gameObject, UndoLabel + ": activar " + PanelCargaName);
+                carga.gameObject.SetActive(true);
+                EditorUtility.SetDirty(carga.gameObject);
+            }
+        }
+
+        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        Undo.CollapseUndoOperations(undoGroup);
+
+        Selection.activeGameObject = canvas.gameObject;
+        Debug.Log("[NutriAR] Estado de arranque seguro aplicado: Panel_PantallaInicio visible, " +
+                  "Panel_Carga activo con CanvasGroup sin raycasts (la UI nunca queda bloqueada).", canvas);
+    }
+
     // ------------------------------------------------------------ Panel_Carga
 
     /// <summary>
@@ -103,9 +162,13 @@ public static class NutriAR_FinalUISetup
 
         CanvasGroup grupo = EnsureComponent<CanvasGroup>(panel.gameObject);
         Undo.RecordObject(grupo, UndoLabel + ": CanvasGroup de carga");
-        grupo.alpha = 1f;
-        grupo.interactable = true;
-        grupo.blocksRaycasts = true;
+        // alpha 0: la escena guardada nunca debe quedar tapada por este negro opaco.
+        // PanelCarga.Start() fuerza alpha = 1 en el primer frame de Play.
+        grupo.alpha = 0f;
+        // Una pantalla de carga solo decora: si capturara raycasts, cualquier fallo del
+        // desvanecido dejaria la interfaz completa sin respuesta.
+        grupo.interactable = false;
+        grupo.blocksRaycasts = false;
         EditorUtility.SetDirty(grupo);
 
         PanelCarga carga = EnsureComponent<PanelCarga>(panel.gameObject);
