@@ -56,7 +56,10 @@ public sealed class MenuLateralARController : MonoBehaviour
         }
     }
 
-    /// <summary>Plato circular: actualiza sprite, aro y vuelve a la calibracion.</summary>
+    /// <summary>
+    /// Plato circular: conmuta el aro y el molde en caliente, sobre la vista AR y conservando el
+    /// radio ya calibrado. No regresa a la pantalla de calibracion.
+    /// </summary>
     public void SeleccionarFormaCircular()
     {
         Cerrar();
@@ -67,7 +70,10 @@ public sealed class MenuLateralARController : MonoBehaviour
         }
     }
 
-    /// <summary>Plato cuadrado: actualiza sprite, aro y vuelve a la calibracion.</summary>
+    /// <summary>
+    /// Plato cuadrado: conmuta el aro y el molde en caliente, sobre la vista AR y conservando el
+    /// radio ya calibrado. No regresa a la pantalla de calibracion.
+    /// </summary>
     public void SeleccionarFormaCuadrada()
     {
         Cerrar();
@@ -108,6 +114,20 @@ public sealed class MenuLateralARController : MonoBehaviour
         if (menu != null)
         {
             menu.AbrirTutorial();
+        }
+    }
+
+    /// <summary>
+    /// Sale de la vista AR y vuelve al menu principal para reiniciar el flujo desde cero. Cierra el
+    /// menu flotante antes de navegar: nunca quedan dos paneles encimados.
+    /// </summary>
+    public void IrAlMenuPrincipal()
+    {
+        Cerrar();
+
+        if (menu != null)
+        {
+            menu.MostrarMenuPrincipal();
         }
     }
 

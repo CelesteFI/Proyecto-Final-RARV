@@ -36,6 +36,9 @@ public sealed class MenuController : MonoBehaviour
 
     private int _pasoTutorial;
 
+    // Pantalla desde la que se abrio el dashboard de metas: decide adonde vuelve su boton Volver.
+    private GameObject _origenMetas;
+
     private void Start()
     {
         if (!ValidarReferencias())
@@ -74,8 +77,38 @@ public sealed class MenuController : MonoBehaviour
         ActivarPanel(panelGuia);
     }
 
-    /// <summary>Dashboard de metas: agua, energia y macronutrientes (sin camara AR).</summary>
-    public void MostrarMetas() => ActivarPanel(panelDashboard);
+    /// <summary>
+    /// Dashboard de metas: agua, energia y macronutrientes (sin camara AR). Antes de abrirlo se
+    /// recuerda la pantalla de origen para que su boton Volver sea contextual.
+    /// </summary>
+    public void MostrarMetas()
+    {
+        GameObject actual = PanelActivo();
+
+        if (actual != panelDashboard)
+        {
+            _origenMetas = actual;
+        }
+
+        ActivarPanel(panelDashboard);
+    }
+
+    /// <summary>
+    /// Boton Volver del dashboard: regresa a la pantalla desde la que se abrio. Abierto desde la
+    /// vista AR con el plato fijado, se vuelve al Panel_AR con el plato y la comida intactos (no
+    /// se reinicia el anclaje ni la calibracion); abierto desde el menu principal, se vuelve a el.
+    /// </summary>
+    public void VolverDesdeMetas()
+    {
+        GameObject destino = _origenMetas;
+
+        if (destino == null || destino == panelDashboard)
+        {
+            destino = panelMenuLateral;
+        }
+
+        ActivarPanel(destino);
+    }
 
     /// <summary>Vista AR de seleccion y porciones (camara AR activa).</summary>
     public void MostrarAR() => ActivarPanel(panelAR);

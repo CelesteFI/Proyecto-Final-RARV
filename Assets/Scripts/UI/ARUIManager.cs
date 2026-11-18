@@ -61,6 +61,14 @@ public sealed class ARUIManager : MonoBehaviour
     [SerializeField] private TMP_Text detalleGrasaNumero;
     [SerializeField] private TMP_Text detalleGrasaSufijo;
 
+    [Header("Sub-panel de detalle: beneficio y sugerencia (base de datos nutricional)")]
+    [Tooltip("Titulo y texto del beneficio principal del alimento.")]
+    [SerializeField] private TMP_Text detalleBeneficioTitulo;
+    [SerializeField] private TMP_Text detalleBeneficio;
+    [Tooltip("Titulo y texto de la sugerencia de combinacion del alimento.")]
+    [SerializeField] private TMP_Text detalleSugerenciaTitulo;
+    [SerializeField] private TMP_Text detalleSugerencia;
+
     [Header("Recuadro de metas del Panel AR (Kcal del alimento elegido)")]
     [Tooltip("Miniatura del alimento que muestra el recuadro superior derecho del Panel_AR.")]
     [SerializeField] private Image metasIcono;
@@ -328,6 +336,8 @@ public sealed class ARUIManager : MonoBehaviour
             Escribir(detalleProteinaNumero, "--");
             Escribir(detalleCarboNumero, "--");
             Escribir(detalleGrasaNumero, "--");
+            Escribir(detalleBeneficio, "--");
+            Escribir(detalleSugerencia, "--");
             return;
         }
 
@@ -345,6 +355,19 @@ public sealed class ARUIManager : MonoBehaviour
         Escribir(detalleGrasaTitulo, "Grasas");
         Escribir(detalleGrasaNumero, info.Grasa(cocido).ToString("F1", CultureInfo.InvariantCulture));
         Escribir(detalleGrasaSufijo, "g");
+
+        // Beneficio y sugerencia: texto fijo de la base de datos nutricional, nunca se calcula aqui.
+        Escribir(detalleBeneficioTitulo, "Beneficio");
+        Escribir(detalleBeneficio, TextoDeBaseDeDatos(info.Beneficio));
+
+        Escribir(detalleSugerenciaTitulo, "Sugerencia de combinacion");
+        Escribir(detalleSugerencia, TextoDeBaseDeDatos(info.Sugerencia));
+    }
+
+    /// <summary>Texto largo de la base de datos nutricional: "--" cuando el alimento no lo tiene cargado.</summary>
+    private static string TextoDeBaseDeDatos(string valor)
+    {
+        return string.IsNullOrWhiteSpace(valor) ? "--" : valor;
     }
 
     /// <summary>
