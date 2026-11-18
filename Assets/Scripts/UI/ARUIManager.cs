@@ -85,8 +85,27 @@ public sealed class ARUIManager : MonoBehaviour
     [Tooltip("Menu lateral flotante: se cierra al servir para dejar ver el plato.")]
     [SerializeField] private MenuLateralARController menuLateral;
 
+    [Header("Metas del Panel AR: porcion ideal personalizada")]
+    [Tooltip("Linea que recomienda la porcion ideal de este alimento segun el perfil biometrico.")]
+    [SerializeField] private TMP_Text metasIdeal;
+    [Tooltip("Perfil biometrico: aporta peso actual, peso objetivo y kcal diarias.")]
+    [SerializeField] private BiometricProfile perfil;
+
     // Alimento abierto ahora mismo en el sub-panel de detalle.
     private string _alimentoDetalle = string.Empty;
+
+    // true cuando la comida ya se sirvio: el molde 3D no cambia de alimento hasta el proximo
+    // "Servir en el plato" (cambiar de alimento en el dropdown no toca el modelo en pantalla).
+    private bool _servidoEnPlato;
+
+    // Alimento y estado que estan realmente servidos en el plato. Pueden diferir del dropdown: la
+    // seleccion no toca el modelo hasta volver a pulsar "Servir en el plato".
+    private string _alimentoServido = string.Empty;
+    private bool _cocidoServido = true;
+
+    // Firma del ultimo calculo de la porcion ideal: solo se reescribe si cambia el perfil o el
+    // alimento elegido (el texto no se recalcula en cada ajuste del slider).
+    private string _claveIdeal = string.Empty;
 
     // Reutilizado en cada refresco: no asigna memoria por ajuste de UI.
     private MaterialPropertyBlock _bloqueColor;
@@ -102,6 +121,16 @@ public sealed class ARUIManager : MonoBehaviour
 
     /// <summary>Estado de coccion elegido en la UI: lo leen el catalogo y el sub-panel de detalle.</summary>
     public bool EstadoCocidoActual => toggleCocido != null && toggleCocido.isOn;
+
+    /// <summary>Alimento que esta servido ahora mismo en el plato (lectura para auditoria).</summary>
+    public string AlimentoServido => _alimentoServido;
+
+    /// <summary>
+    /// true solo si hay un modelo servido y visible: el Slider y el Toggle refrescan en vivo ese
+    /// modelo; el resto del tiempo el molde permanece apagado y no se toca.
+    /// </summary>
+    public bool HayComidaServida =>
+        _servidoEnPlato && moldeHolograma != null && moldeHolograma.gameObject.activeSelf;
 
     private void Start()
     {
@@ -140,8 +169,26 @@ public sealed class ARUIManager : MonoBehaviour
         }
     }
 
-    private void OnGramosCambiados(float valor) => ActualizarMolde();
+    /// <summary>
+    /// Slider de porcion. Con comida ya servida reescala el modelo en pantalla en el acto usando
+    /// la densidad del alimento servido; sin comida servida el molde sigue apagado.
+    /// </summary>
+    private void OnGramosCambiados(float valor)
+    {
+        if (_servidoEnPlato)
+        {
+            Refrescar(false);
+            ActualizarMoldeServido(false);
+            return;
+        }
 
+        ActualizarMolde();
+    }
+
+    /// <summary>
+    /// Dropdown: nunca toca el modelo 3D del plato. Solo refresca el recuadro de metas y el estado
+    /// de coccion que exige el alimento elegido; el modelo cambia al pulsar "Servir en el plato".
+    /// </summary>
     private void OnAlimentoCambiado(int indice)
     {
         // Los platos compuestos solo existen cocidos: el Toggle se marca y se bloquea.
@@ -149,20 +196,59 @@ public sealed class ARUIManager : MonoBehaviour
         ActualizarMolde();
     }
 
-    private void OnCocidoCambiado(bool estado) => ActualizarMolde();
+    /// <summary>
+    /// Toggle crudo/cocido. Con comida servida cambia en el acto el slot/color del modelo servido
+    /// (los guisados lo bloquean) y recalcula su escala; sin comida servida solo refresca la UI.
+    /// </summary>
+    private void OnCocidoCambiado(bool estado)
+    {
+        if (!_servidoEnPlato)
+        {
+            ActualizarMolde();
+            return;
+        }
 
-    /// <summary>Lee la UI, resuelve el modelo y aplica la escala al Transform existente.</summary>
+        bool servidoEsPlato = catalog != null && catalog.EsPlatoCompuesto(_alimentoServido);
+
+        if (!servidoEsPlato)
+        {
+            _cocidoServido = estado;
+        }
+
+        Refrescar(false);
+        ActualizarMoldeServido(!servidoEsPlato);
+    }
+
+    /// <summary>
+    /// Recalculo de toda la UI. Sin comida servida el molde esta apagado y no se toca (el Slider y
+    /// el Toggle solo refrescan sus cifras); el modelo 3D cambia unicamente al pulsar "Servir en el
+    /// plato" o, ya servido, cuando el Slider o el Toggle lo refrescan en vivo.
+    /// </summary>
     public void ActualizarMolde()
+    {
+        Refrescar(false);
+    }
+
+    /// <summary>
+    /// Lee la UI, calcula los gramos reales de la porcion y refresca el recuadro de metas. Solo
+    /// escribe en el molde 3D cuando se pide expresamente (servir en el plato).
+    /// </summary>
+    private void Refrescar(bool aplicarAlMolde)
     {
         AlimentoActual = ObtenerAlimentoActual();
 
         bool cocido = toggleCocido != null && toggleCocido.isOn;
-        float gramos = sliderGramos != null ? sliderGramos.value : 0f;
 
-        // El recuadro de metas del Panel_AR muestra siempre las Kcal base del alimento elegido.
-        RefrescarMetasDelAlimento(cocido);
+        // El slider fija el VOLUMEN de la porcion (cm3) y la masa real depende de la densidad del
+        // alimento en el estado elegido: G = volumen x densidad. De ahi salen los valores del
+        // recuadro de metas (porcion real, no 100 g) y la escala del molde.
+        float volumen = sliderGramos != null ? sliderGramos.value : 0f;
+        float densidad = ResolverDensidad(AlimentoActual, cocido);
+        float gramos = volumen * densidad;
 
-        // La etiqueta refleja siempre los gramos pedidos, con modelo del catalogo o con el cilindro.
+        RefrescarMetasDelAlimento(cocido, gramos);
+
+        // La etiqueta refleja siempre los gramos reales, con modelo del catalogo o con el cilindro.
         // Modularidad: el numero y el sufijo van en dos TextMeshProUGUI distintos.
         int gramosEnteros = Mathf.RoundToInt(gramos);
 
@@ -178,8 +264,21 @@ public sealed class ARUIManager : MonoBehaviour
             textoGramosSufijo.text = sufijoGramos;
         }
 
+        if (aplicarAlMolde)
+        {
+            AplicarModeloYEscala(AlimentoActual, cocido, gramos, densidad);
+        }
+    }
+
+    /// <summary>
+    /// Escribe en el molde el alimento, el estado y la porcion indicados: elige el slot del catalogo
+    /// (o el cilindro parametrico) y aplica la escala. Es el unico punto que cambia el alimento del
+    /// modelo 3D, y solo lo llaman "Servir en el plato" y el Toggle crudo/cocido ya servido.
+    /// </summary>
+    private void AplicarModeloYEscala(string nombre, bool cocido, float gramos, float densidad)
+    {
         FoodModelSlot slot = null;
-        bool haySlot = catalog != null && catalog.TryGetSlot(AlimentoActual, cocido, out slot);
+        bool haySlot = catalog != null && catalog.TryGetSlot(nombre, cocido, out slot);
 
         if (haySlot && slot != null && slot.TieneModelo)
         {
@@ -207,19 +306,64 @@ public sealed class ARUIManager : MonoBehaviour
         if (moldeRenderer != null)
         {
             moldeRenderer.enabled = true;
-            AplicarColorMolde(ObtenerColorBase(cocido));
-        }
-
-        if (!FoodDensityData.TryGetDensity(AlimentoActual, cocido, out float densidad))
-        {
-            Debug.LogWarning("[ARUIManager] Sin densidad registrada para '" + AlimentoActual +
-                             "' (cocido: " + cocido + "). Se usa " + DensidadPorDefecto + " g/cm3.", this);
-            densidad = DensidadPorDefecto;
+            AplicarColorMolde(ObtenerColorDe(nombre, cocido));
         }
 
         float radioPlato = ARState.HasPlate ? ARState.SelectedPlateRadius : ARState.DefaultPlateRadiusCm;
 
         moldeHolograma.localScale = calculator.CalculateLocalScale(densidad, gramos, radioPlato);
+    }
+
+    /// <summary>
+    /// Refresco en vivo del modelo ya servido: el volumen sale del slider y la densidad del alimento
+    /// servido (no del dropdown). Con cambiarSlot tambien cambia el modelo y el color del catalogo
+    /// (Toggle crudo/cocido); sin el, solo se reescala la misma pieza que ya esta en el plato.
+    /// </summary>
+    private void ActualizarMoldeServido(bool cambiarSlot)
+    {
+        if (!HayComidaServida || string.IsNullOrEmpty(_alimentoServido))
+        {
+            return;
+        }
+
+        float volumen = sliderGramos != null ? sliderGramos.value : 0f;
+        float densidad = ResolverDensidad(_alimentoServido, _cocidoServido);
+        float gramos = volumen * densidad;
+
+        if (cambiarSlot)
+        {
+            AplicarModeloYEscala(_alimentoServido, _cocidoServido, gramos, densidad);
+            return;
+        }
+
+        FoodModelSlot servido = null;
+        bool conModelo = catalog != null &&
+                         catalog.TryGetSlot(_alimentoServido, _cocidoServido, out servido) &&
+                         servido != null && servido.TieneModelo;
+
+        if (conModelo)
+        {
+            moldeHolograma.localScale = VolumeCalculator.EscalaUniformeParaGramos(gramos, servido.gramosReferencia);
+            return;
+        }
+
+        float radioPlato = ARState.HasPlate ? ARState.SelectedPlateRadius : ARState.DefaultPlateRadiusCm;
+
+        moldeHolograma.localScale = calculator.CalculateLocalScale(densidad, gramos, radioPlato);
+    }
+
+    /// <summary>Densidad aparente (g/cm3) del alimento en el estado elegido; 1 g/cm3 si falta.</summary>
+    private float ResolverDensidad(string nombre, bool cocido)
+    {
+        if (FoodDensityData.TryGetDensity(nombre, cocido, out float densidad))
+        {
+            return densidad;
+        }
+
+        Debug.LogWarning("[ARUIManager] Sin densidad registrada para '" + nombre +
+                         "' (cocido: " + cocido + "). Se usa " + DensidadPorDefecto + " g/cm3.", this);
+
+        return DensidadPorDefecto;
     }
 
     /// <summary>
@@ -243,10 +387,10 @@ public sealed class ARUIManager : MonoBehaviour
         }
     }
 
-    /// <summary>Color base que corresponde al alimento y estado actuales.</summary>
-    private Color ObtenerColorBase(bool cocido)
+    /// <summary>Color base del catalogo para el alimento y el estado indicados.</summary>
+    private Color ObtenerColorDe(string nombre, bool cocido)
     {
-        if (catalog != null && catalog.TryGetColor(AlimentoActual, cocido, out Color color))
+        if (catalog != null && catalog.TryGetColor(nombre, cocido, out Color color))
         {
             return color;
         }
@@ -291,7 +435,16 @@ public sealed class ARUIManager : MonoBehaviour
     /// </summary>
     public void ServirEnElPlato()
     {
-        ActualizarMolde();
+        // Alimento y estado que quedan servidos: el modelo en pantalla los conserva hasta el proximo
+        // "Servir en el plato", aunque despues cambie el Dropdown o el Toggle.
+        _alimentoServido = ObtenerAlimentoActual();
+        _cocidoServido = EstadoCocidoActual ||
+                         (catalog != null && catalog.EsPlatoCompuesto(_alimentoServido));
+
+        // Aplica al molde los valores vigentes de la UI (alimento, estado, volumen) justo ahora: es
+        // el unico momento en que el modelo 3D en pantalla cambia de alimento.
+        Refrescar(true);
+        _servidoEnPlato = true;
 
         // El molde ya escalado se coloca en el plato fijado y se enciende: servirlo nunca deja la
         // vista vacia aunque el anclaje se hubiera reiniciado al pasar por la calibracion.
@@ -371,10 +524,11 @@ public sealed class ARUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Recuadro de metas del Panel_AR: escribe el nombre, las Kcal base por 100 g y los macros del
-    /// alimento elegido en el dropdown. Cada cifra y su unidad viven en TMP distintos.
+    /// Recuadro de metas del Panel_AR: nombre, miniatura y los valores de la porcion elegida. Los
+    /// gramos reales llegan ya calculados (volumen del slider x densidad) y cada cifra se obtiene
+    /// con la regla de tres de la base de datos por 100 g.
     /// </summary>
-    private void RefrescarMetasDelAlimento(bool cocido)
+    private void RefrescarMetasDelAlimento(bool cocido, float gramos)
     {
         string nombre = AlimentoActual;
 
@@ -403,17 +557,96 @@ public sealed class ARUIManager : MonoBehaviour
             Escribir(metasProteinaNumero, "--");
             Escribir(metasCarboNumero, "--");
             Escribir(metasGrasaNumero, "--");
+            Escribir(metasIdeal, "--");
+            _claveIdeal = string.Empty;
             return;
         }
 
-        Escribir(metasKcalNumero, Mathf.RoundToInt(info.Kcal(cocido)).ToString(CultureInfo.InvariantCulture));
-        Escribir(metasKcalSufijo, "kcal / 100 g");
-        Escribir(metasProteinaNumero, info.Proteina(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        // Valor de la porcion = (valor por 100 g / 100) x gramos reales.
+        float factor = Mathf.Max(gramos, 0f) / 100f;
+
+        Escribir(metasKcalNumero, Mathf.RoundToInt(info.Kcal(cocido) * factor).ToString(CultureInfo.InvariantCulture));
+        Escribir(metasKcalSufijo, "kcal");
+        Escribir(metasProteinaNumero, (info.Proteina(cocido) * factor).ToString("F1", CultureInfo.InvariantCulture));
         Escribir(metasProteinaSufijo, "g");
-        Escribir(metasCarboNumero, info.Carbohidrato(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        Escribir(metasCarboNumero, (info.Carbohidrato(cocido) * factor).ToString("F1", CultureInfo.InvariantCulture));
         Escribir(metasCarboSufijo, "g");
-        Escribir(metasGrasaNumero, info.Grasa(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        Escribir(metasGrasaNumero, (info.Grasa(cocido) * factor).ToString("F1", CultureInfo.InvariantCulture));
         Escribir(metasGrasaSufijo, "g");
+
+        RefrescarPorcionIdeal(nombre, cocido, info);
+    }
+
+    /// <summary>
+    /// Porcion ideal para este alimento segun el perfil biometrico: toma la fraccion de las kcal
+    /// diarias que corresponde a una comida principal (mas si el usuario quiere subir de peso,
+    /// menos si quiere bajar) y la convierte a gramos con la densidad energetica del alimento.
+    /// El texto solo se reescribe cuando cambia el perfil o el alimento/estado elegido.
+    /// </summary>
+    private void RefrescarPorcionIdeal(string nombre, bool cocido, FoodNutrition info)
+    {
+        if (metasIdeal == null)
+        {
+            return;
+        }
+
+        if (perfil == null || perfil.KcalObjetivo <= 0f)
+        {
+            if (_claveIdeal.Length > 0)
+            {
+                _claveIdeal = string.Empty;
+            }
+
+            Escribir(metasIdeal, "Ideal: calcula tu perfil biometrico");
+            return;
+        }
+
+        // Firma del perfil + alimento: mientras no cambie, el valor se da por bueno.
+        string clave = nombre + "|" + cocido + "|" +
+                       perfil.KcalObjetivo.ToString("F1", CultureInfo.InvariantCulture) + "|" +
+                       perfil.PesoActualKg.ToString("F1", CultureInfo.InvariantCulture) + "|" +
+                       perfil.PesoObjetivoKg.ToString("F1", CultureInfo.InvariantCulture);
+
+        if (clave == _claveIdeal)
+        {
+            return;
+        }
+
+        _claveIdeal = clave;
+
+        float kcalPor100 = info.Kcal(cocido);
+
+        if (kcalPor100 <= 0f)
+        {
+            Escribir(metasIdeal, "Ideal: --");
+            return;
+        }
+
+        // Una comida principal cubre el 25 % de la energia diaria; subir de peso pide un plato mas
+        // energetico y bajar de peso uno mas ligero.
+        float fraccion = 0.25f;
+
+        if (perfil.TienePesoObjetivo)
+        {
+            float diferencia = perfil.PesoObjetivoKg - perfil.PesoActualKg;
+
+            if (diferencia > 0.5f)
+            {
+                fraccion = 0.30f;
+            }
+            else if (diferencia < -0.5f)
+            {
+                fraccion = 0.20f;
+            }
+        }
+
+        float gramosIdeales = Mathf.Clamp(fraccion * perfil.KcalObjetivo * 100f / kcalPor100, 30f, 600f);
+        gramosIdeales = Mathf.Round(gramosIdeales / 5f) * 5f;
+
+        int kcalIdeales = Mathf.RoundToInt(gramosIdeales * kcalPor100 / 100f);
+
+        Escribir(metasIdeal, "Ideal para ti: " + gramosIdeales.ToString("F0", CultureInfo.InvariantCulture) +
+                              " g · " + kcalIdeales.ToString(CultureInfo.InvariantCulture) + " kcal");
     }
 
     private static void Escribir(TMP_Text campo, string valor)

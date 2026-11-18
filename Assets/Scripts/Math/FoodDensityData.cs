@@ -21,7 +21,8 @@ public readonly struct FoodDensity
 }
 
 /// <summary>
-/// Repositorio estatico de densidades de los 12 alimentos de prueba.
+/// Repositorio estatico de densidades aparentes (g/cm3) de los 14 alimentos del catalogo:
+/// 10 ingredientes en crudo y cocido mas 4 platos compuestos (solo cocidos).
 /// </summary>
 public static class FoodDensityData
 {
@@ -29,32 +30,27 @@ public static class FoodDensityData
 
     public static readonly IReadOnlyList<FoodDensity> Entries = new[]
     {
-        new FoodDensity("Arroz",       0.85f, 0.72f),
-        new FoodDensity("Pasta",       0.62f, 0.85f),
-        new FoodDensity("Pollo",       1.05f, 0.90f),
-        new FoodDensity("Res",         1.06f, 0.95f),
-        new FoodDensity("Cerdo",       1.03f, 0.92f),
-        new FoodDensity("Salmon",      1.05f, 0.94f),
-        new FoodDensity("Atun",        1.08f, 0.96f),
-        new FoodDensity("Huevo",       1.03f, 0.98f),
-        new FoodDensity("Papa",        1.09f, 0.92f),
-        new FoodDensity("Zanahoria",   1.04f, 0.96f),
-        new FoodDensity("Brocoli",     0.38f, 0.34f),
-        new FoodDensity("Frijol",      0.80f, 1.00f),
+        // Carnes: la base de datos del panel de detalle da la misma densidad en ambos estados.
+        new FoodDensity("Pollo",        1.05f, 1.05f),
+        new FoodDensity("Res",          1.05f, 1.05f),
+        new FoodDensity("Cerdo",        1.00f, 1.00f),
 
-        // Legumbres y verduras de la guia nutricional (densidades de la base de datos del panel de
-        // detalle). Se sirven ya cocidas, asi que crudo y cocido comparten valor.
-        new FoodDensity("Lentejas",    0.85f, 0.85f),
-        new FoodDensity("Garbanzos",   0.85f, 0.85f),
-        new FoodDensity("Espinaca",    0.90f, 0.90f),
-        new FoodDensity("Calabacita",  0.60f, 0.60f),
+        // Leguminosas: secas (crudo) y ya remojadas / cocidas.
+        new FoodDensity("Frijol Negro", 1.30f, 0.85f),
+        new FoodDensity("Lentejas",     1.30f, 0.85f),
+        new FoodDensity("Garbanzos",    1.30f, 0.85f),
 
-        // Slots 21-24 del catalogo: platos compuestos. No cambian de densidad al "cocinarse"
-        // porque ya se sirven preparados (crudo y cocido comparten valor).
-        new FoodDensity("Guiso de Pollo",    0.95f, 0.95f),
-        new FoodDensity("Sopa de Verduras",  0.90f, 0.90f),
-        new FoodDensity("Arroz con Pollo",   0.88f, 0.88f),
-        new FoodDensity("Ensalada Mixta",    0.45f, 0.45f)
+        // Verduras.
+        new FoodDensity("Espinaca",     0.15f, 0.90f),
+        new FoodDensity("Zanahoria",    0.60f, 0.65f),
+        new FoodDensity("Papa",         0.65f, 0.70f),
+        new FoodDensity("Calabacita",   0.50f, 0.60f),
+
+        // Platos compuestos: se sirven preparados, asi que crudo y cocido comparten densidad.
+        new FoodDensity("Arroz con Frijoles", 0.85f, 0.85f),
+        new FoodDensity("Picadillo de Res",   1.00f, 1.00f),
+        new FoodDensity("Guisado de Pollo",   1.00f, 1.00f),
+        new FoodDensity("Lentejas con Cerdo", 0.95f, 0.95f)
     };
 
     private static readonly Dictionary<string, FoodDensity> Lookup = BuildLookup();
@@ -151,69 +147,70 @@ public readonly struct FoodNutrition
 }
 
 /// <summary>
-/// Repositorio estatico de energia y macronutrientes (por 100 g) de los mismos alimentos del
-/// catalogo y de FoodDensityData. Los platos compuestos solo existen cocidos, asi que crudo y
-/// cocido comparten valor.
+/// Repositorio estatico de energia y macronutrientes (por 100 g) de los 14 alimentos del
+/// catalogo y de FoodDensityData. Los cuatro platos compuestos solo existen cocidos, asi que
+/// crudo y cocido comparten valor.
 /// </summary>
 public static class FoodNutritionData
 {
     public static readonly IReadOnlyList<FoodNutrition> Entries = new[]
     {
-        new FoodNutrition("Arroz",           358f, 7.1f, 78.0f, 0.7f,   130f, 2.7f, 28.0f, 0.3f),
-        new FoodNutrition("Pasta",           371f, 13.0f, 75.0f, 1.5f,  158f, 5.8f, 31.0f, 0.9f),
+        new FoodNutrition("Pollo",            110f, 23.0f, 0.0f, 1.2f,   165f, 31.0f, 0.0f, 3.6f,
+                          "Alta biodisponibilidad de proteína magra y rico en Niacina (B3) para el metabolismo energético.",
+                          "Combínalo con verduras ricas en Vitamina C (espinaca o pimiento) para mejorar la absorción de nutrientes."),
 
-        new FoodNutrition("Pollo",           165f, 31.0f, 0.0f, 3.6f,   190f, 29.0f, 0.0f, 7.0f,
-                          "Alta biodisponibilidad de proteína y rico en Niacina (B3) para el metabolismo.",
-                          "Combínalo con Vitamina C (pimientos o espinacas) para maximizar absorción."),
+        new FoodNutrition("Res",              143f, 22.0f, 0.0f, 5.0f,   250f, 26.0f, 0.0f, 15.0f,
+                          "Fuente principal de Hierro hemo y Vitamina B12, clave para prevenir la fatiga y mantener la masa muscular.",
+                          "Evita combinarla con lácteos en la misma comida, ya que el calcio reduce la absorción del hierro."),
 
-        new FoodNutrition("Res",             250f, 26.0f, 0.0f, 15.0f,  244f, 27.0f, 0.0f, 14.0f,
-                          "Excelente fuente de Hierro hemo y B12, crucial contra la fatiga.",
-                          "Evita consumirla con lácteos para no inhibir la absorción del hierro."),
+        new FoodNutrition("Cerdo",            143f, 21.0f, 0.0f, 6.0f,   242f, 27.0f, 0.0f, 14.0f,
+                          "Rico en Tiamina (Vitamina B1), esencial para el sistema nervioso y la recuperación muscular.",
+                          "Ideal después de entrenar; acompáñalo con carbohidratos complejos como papa o frijoles."),
 
-        new FoodNutrition("Cerdo",           242f, 27.0f, 0.0f, 14.0f,  290f, 25.0f, 0.0f, 21.0f,
-                          "Rica en Tiamina (B1), esencial para el sistema nervioso y muscular.",
-                          "Gran opción post-entrenamiento acompañada de carbohidratos complejos como papa o arroz."),
+        new FoodNutrition("Frijol Negro",     341f, 21.0f, 62.0f, 1.5f,  132f, 8.8f, 23.0f, 0.5f,
+                          "Alto en fibra soluble que estabiliza la glucosa en sangre y mejora la digestión.",
+                          "Combínalos con un cereal (arroz o tortilla de maíz) para obtener una proteína completa."),
 
-        new FoodNutrition("Salmon",          208f, 20.0f, 0.0f, 13.0f,  206f, 22.0f, 0.0f, 12.0f),
-        new FoodNutrition("Atun",            132f, 28.0f, 0.0f, 1.0f,   184f, 30.0f, 0.0f, 6.0f),
-        new FoodNutrition("Huevo",           143f, 13.0f, 1.1f, 9.5f,   155f, 13.0f, 1.1f, 11.0f),
+        new FoodNutrition("Lentejas",         353f, 25.0f, 60.0f, 1.0f,  116f, 9.0f, 20.0f, 0.4f,
+                          "Aportan ácido fólico, hierro vegetal y magnesio para la salud cardiovascular.",
+                          "Agrega unas gotas de limón al servirlas; la vitamina C multiplica la absorción de su hierro."),
 
-        new FoodNutrition("Papa",             77f, 2.0f, 17.0f, 0.1f,    87f, 2.0f, 20.0f, 0.1f,
-                          "Carbohidrato de rápida asimilación y altísimo en Potasio para los músculos.",
-                          "Si la hierves y dejas enfriar, crea almidón resistente excelente para la flora intestinal."),
+        new FoodNutrition("Garbanzos",        364f, 19.0f, 61.0f, 6.0f,  164f, 8.8f, 27.0f, 2.5f,
+                          "Generan alta saciedad por su mezcla de fibra y proteína vegetal, ayudando a controlar el apetito.",
+                          "Excelentes con verduras frescas o en guisos ligeros para una comida equilibrada."),
 
-        new FoodNutrition("Zanahoria",        41f, 0.9f, 9.6f, 0.2f,    35f, 0.8f, 8.2f, 0.2f,
-                          "Altísima en Betacarotenos (Vitamina A) para el sistema inmune y la piel.",
-                          "Consúmela con una pequeña porción de grasa para que tu cuerpo absorba la vitamina A."),
+        new FoodNutrition("Espinaca",          23f, 2.8f, 3.6f, 0.3f,    23f, 2.9f, 3.7f, 0.3f,
+                          "Muy rica en Vitamina K (salud ósea) y antioxidantes que protegen la vista.",
+                          "Cocerla brevemente al vapor reduce el ácido oxálico y facilita la absorción de sus minerales."),
 
-        new FoodNutrition("Brocoli",          34f, 2.8f, 6.6f, 0.4f,    35f, 2.4f, 7.2f, 0.4f),
+        new FoodNutrition("Zanahoria",         41f, 0.9f, 9.5f, 0.2f,    35f, 0.7f, 8.0f, 0.1f,
+                          "Altísima en betacarotenos (Vitamina A), clave para el sistema inmune y la piel.",
+                          "Consúmela junto a una fuente de grasa saludable o carne para absorber mejor la Vitamina A."),
 
-        new FoodNutrition("Frijol",          333f, 23.0f, 60.0f, 1.2f,  132f, 8.8f, 23.0f, 0.5f,
-                          "Alto en fibra soluble que regula el azúcar en sangre y mejora la digestión.",
-                          "Combínalos siempre con un cereal (arroz o maíz) para formar proteína completa."),
+        new FoodNutrition("Papa",              77f, 2.0f, 17.0f, 0.1f,   87f, 1.8f, 20.0f, 0.1f,
+                          "Carbohidrato de energía limpia con más potasio que el plátano, ideal para recuperación.",
+                          "Si la hierves y la dejas enfriar, forma almidón resistente que beneficia tu flora intestinal."),
 
-        // Legumbres y verduras de la guía nutricional: la base de datos solo trae el valor de
-        // consumo (cocido/fresco), asi que crudo y cocido comparten cifra, igual que los platos compuestos.
-        new FoodNutrition("Lentejas",        116f, 9.0f, 20.0f, 0.4f,   116f, 9.0f, 20.0f, 0.4f,
-                          "Aportan ácido fólico y magnesio, fundamentales para la salud cardiovascular.",
-                          "Agrega un chorrito de limón; la vitamina C dispara la absorción de su hierro vegetal."),
+        new FoodNutrition("Calabacita",        17f, 1.2f, 3.1f, 0.3f,    15f, 1.1f, 2.7f, 0.3f,
+                          "Casi 90% agua, hidrata y tiene un índice glucémico muy bajo.",
+                          "Úsala para dar volumen a tu plato sin sumar calorías extra; combínala con proteína magra."),
 
-        new FoodNutrition("Garbanzos",       164f, 8.8f, 27.0f, 2.5f,   164f, 8.8f, 27.0f, 2.5f,
-                          "Contienen fitoestrógenos y mucha saciedad para controlar el apetito.",
-                          "Perfectos en ensaladas mixtas o triturados con vegetales frescos."),
+        // Platos compuestos: solo se sirven cocidos, asi que crudo y cocido comparten cifra.
+        new FoodNutrition("Arroz con Frijoles", 140f, 5.0f, 25.0f, 1.0f,  140f, 5.0f, 25.0f, 1.0f,
+                          "Combinación clásica que forma una proteína vegetal completa con energía sostenida.",
+                          "Acompáñalo con verduras frescas o una porción de proteína magra para balancear el plato."),
 
-        new FoodNutrition("Espinaca",         23f, 2.9f, 3.7f, 0.3f,    23f, 2.9f, 3.7f, 0.3f,
-                          "Bomba de Vitamina K (salud ósea) y antioxidantes protectores.",
-                          "Cocerla levemente al vapor reduce el ácido oxálico y mejora la absorción de minerales."),
+        new FoodNutrition("Picadillo de Res",   220f, 18.0f, 10.0f, 12.0f,  220f, 18.0f, 10.0f, 12.0f,
+                          "Aporta proteína completa, hierro y carbohidratos moderados de la papa y zanahoria.",
+                          "Sírvelo con verduras verdes al vapor para sumar fibra y equilibrar las grasas."),
 
-        new FoodNutrition("Calabacita",       15f, 1.1f, 2.7f, 0.3f,    15f, 1.1f, 2.7f, 0.3f,
-                          "Casi 90% agua, aporta hidratación celular y un índice glucémico bajísimo.",
-                          "Ideal para dar volumen al plato sin sumar calorías pesadas; pruébala salteada."),
+        new FoodNutrition("Guisado de Pollo",   150f, 15.0f, 12.0f, 5.0f,   150f, 15.0f, 12.0f, 5.0f,
+                          "Platillo equilibrado, alto en proteína y moderado en calorías con aporte de vegetales.",
+                          "Perfecto como plato fuerte; regula la porción de salsa si buscas déficit calórico."),
 
-        new FoodNutrition("Guiso de Pollo",  145f, 11.0f, 9.0f, 7.0f,   145f, 11.0f, 9.0f, 7.0f),
-        new FoodNutrition("Sopa de Verduras", 45f, 1.5f, 6.0f, 1.5f,     45f, 1.5f, 6.0f, 1.5f),
-        new FoodNutrition("Arroz con Pollo", 175f, 8.0f, 22.0f, 6.0f,   175f, 8.0f, 22.0f, 6.0f),
-        new FoodNutrition("Ensalada Mixta",  60f, 1.5f, 5.0f, 4.0f,     60f, 1.5f, 5.0f, 4.0f)
+        new FoodNutrition("Lentejas con Cerdo", 180f, 15.0f, 15.0f, 6.0f,   180f, 15.0f, 15.0f, 6.0f,
+                          "Combina proteína animal y vegetal con alto aporte de fibra, hierro y vitaminas del complejo B.",
+                          "Añade un toque de limón o verdura fresca para potenciar la absorción del hierro.")
     };
 
     private static readonly Dictionary<string, FoodNutrition> Lookup = BuildNutritionLookup();

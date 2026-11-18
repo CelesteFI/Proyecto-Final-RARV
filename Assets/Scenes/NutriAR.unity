@@ -769,14 +769,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95, g: 0.5, b: 0.4, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 1083de145b0d99c4595790aad4e922e2, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1616,7 +1616,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ensalada Mixta
+  m_text: Lentejas con Cerdo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2382,6 +2382,143 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -170}
   m_SizeDelta: {x: 460, y: 56}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &184023588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 184023589}
+  - component: {fileID: 184023591}
+  - component: {fileID: 184023590}
+  m_Layer: 0
+  m_Name: IdealTexto
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &184023589
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184023588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2144152516}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -330}
+  m_SizeDelta: {x: 420, y: 34}
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &184023590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184023588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 'Ideal para ti: --'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4292590248
+  m_fontColor: {r: 0.65882355, g: 0.7294118, b: 0.85882354, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 20
+  m_fontSizeBase: 20
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &184023591
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 184023588}
+  m_CullTransparentMesh: 1
 --- !u!1 &189649662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,14 +2782,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.93, g: 0.9, b: 0.82, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 61faf345365af8c4791896269997574a, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2727,7 +2864,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 77
+  m_text: 87
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3702,7 +3839,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Atun
+  m_text: Espinaca
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3839,7 +3976,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Huevo
+  m_text: Zanahoria
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4213,7 +4350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 247814573}
   m_Layer: 0
-  m_Name: Modelo_20_Zanahoria_Cocido
+  m_Name: Modelo_20_Calabacita_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4499,7 +4636,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 175
+  m_text: 150
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4629,14 +4766,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2, g: 0.62, b: 0.3, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: d68be70723a78644abc59c8ced522a79, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5023,7 +5160,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Guiso de Pollo
+          m_StringArgument: Arroz con Frijoles
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &276740378
@@ -8566,7 +8703,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Kcal del alimento
+  m_text: Valores de la porcion
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8915,7 +9052,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 60
+  m_text: 180
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9052,7 +9189,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Arroz con Pollo
+  m_text: Guisado de Pollo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9279,7 +9416,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 250
+  m_text: 132
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9643,7 +9780,7 @@ GameObject:
   m_Component:
   - component: {fileID: 532986734}
   m_Layer: 0
-  m_Name: Modelo_21_GuisodePollo_Plato
+  m_Name: Modelo_21_ArrozconFrijoles_Plato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9674,7 +9811,7 @@ GameObject:
   m_Component:
   - component: {fileID: 541919841}
   m_Layer: 0
-  m_Name: Modelo_10_Cerdo_Cocido
+  m_Name: Modelo_10_Lentejas_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9889,7 +10026,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sopa de Verduras
+  m_text: Picadillo de Res
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10074,14 +10211,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.35, g: 0.7, b: 0.4, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 8c86481739e91bd45ad03e073fd87850, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10286,14 +10423,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.62, b: 0.32, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: b205e65420da1f940a0dcde2b28aeaf1, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10635,14 +10772,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.3, b: 0.32, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: d9a67cd0e95649245b2094ee114ddc3f, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10991,7 +11128,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pollo
+  m_text: Cerdo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12741,7 +12878,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Zanahoria
+  m_text: Calabacita
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12968,7 +13105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 725518099}
   m_Layer: 0
-  m_Name: Modelo_03_Pasta_Crudo
+  m_Name: Modelo_03_Res_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13934,14 +14071,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.68, b: 0.35, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: b3a8abb3bee2bc24bbdfcd5f674da46a, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14312,7 +14449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 242
+  m_text: 116
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14735,7 +14872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 812237622}
   m_Layer: 0
-  m_Name: Modelo_14_Atun_Cocido
+  m_Name: Modelo_14_Espinaca_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14950,7 +15087,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Salmon
+  m_text: Garbanzos
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15095,7 +15232,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Arroz
+  m_text: Pollo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15260,12 +15397,6 @@ MonoBehaviour:
   m_MultiSelect: 0
   m_Options:
     m_Options:
-    - m_Text: Arroz
-      m_Image: {fileID: 21300000, guid: dfba749dabef8ac4b8008fd56b2267f3, type: 3}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Pasta
-      m_Image: {fileID: 21300000, guid: 91fca17f23703e64a9736a548a7103c2, type: 3}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: Pollo
       m_Image: {fileID: 21300000, guid: 61faf345365af8c4791896269997574a, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -15275,32 +15406,38 @@ MonoBehaviour:
     - m_Text: Cerdo
       m_Image: {fileID: 21300000, guid: d68be70723a78644abc59c8ced522a79, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Salmon
-      m_Image: {fileID: 21300000, guid: a49132b2ae2447c43bb8722fdaeb9d11, type: 3}
+    - m_Text: Frijol Negro
+      m_Image: {fileID: 21300000, guid: 3033571b9cfc8c24884067637450d3ec, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Atun
-      m_Image: {fileID: 21300000, guid: 2f7254d8de24aab4b8dcd1947d482167, type: 3}
+    - m_Text: Lentejas
+      m_Image: {fileID: 21300000, guid: 6e82fd41bf3e031439323fa5426d305f, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Huevo
-      m_Image: {fileID: 21300000, guid: 111716c3567c5b7449580182be8c5706, type: 3}
+    - m_Text: Garbanzos
+      m_Image: {fileID: 21300000, guid: 1083de145b0d99c4595790aad4e922e2, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Papa
-      m_Image: {fileID: 21300000, guid: 76ea1c6fab85d42449100efeed4851fc, type: 3}
+    - m_Text: Espinaca
+      m_Image: {fileID: 21300000, guid: d9a67cd0e95649245b2094ee114ddc3f, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: Zanahoria
       m_Image: {fileID: 21300000, guid: 0c7a001a3b516ae448f84c0988dfbf74, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Guiso de Pollo
+    - m_Text: Papa
+      m_Image: {fileID: 21300000, guid: 76ea1c6fab85d42449100efeed4851fc, type: 3}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
+    - m_Text: Calabacita
+      m_Image: {fileID: 21300000, guid: d5abd3d12e5aec5479501d37daca7e5a, type: 3}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
+    - m_Text: Arroz con Frijoles
+      m_Image: {fileID: 21300000, guid: b205e65420da1f940a0dcde2b28aeaf1, type: 3}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
+    - m_Text: Picadillo de Res
+      m_Image: {fileID: 21300000, guid: b3a8abb3bee2bc24bbdfcd5f674da46a, type: 3}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
+    - m_Text: Guisado de Pollo
       m_Image: {fileID: 21300000, guid: 888f9e8a06287324691d6de467fe9861, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Sopa de Verduras
-      m_Image: {fileID: 21300000, guid: e7569a53922a9fc4fbf6550bff891233, type: 3}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Arroz con Pollo
-      m_Image: {fileID: 21300000, guid: cf77675e05d4e1e488f7f0960530d6df, type: 3}
-      m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Ensalada Mixta
-      m_Image: {fileID: 21300000, guid: 0e735961dc058c847809189331be653f, type: 3}
+    - m_Text: Lentejas con Cerdo
+      m_Image: {fileID: 21300000, guid: 8c86481739e91bd45ad03e073fd87850, type: 3}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16886,7 +17023,7 @@ GameObject:
   m_Component:
   - component: {fileID: 925297590}
   m_Layer: 0
-  m_Name: Modelo_02_Arroz_Cocido
+  m_Name: Modelo_02_Pollo_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17746,7 +17883,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cerdo
+  m_text: Lentejas
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -18270,7 +18407,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Arroz con Pollo
+          m_StringArgument: Guisado de Pollo
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &974555695
@@ -18955,7 +19092,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1014699737}
   m_Layer: 0
-  m_Name: Modelo_07_Res_Crudo
+  m_Name: Modelo_07_FrijolNegro_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20168,10 +20305,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1010864373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 489.1437, y: -1243.8114}
+  m_SizeDelta: {x: 698.2874, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1127280164
 MonoBehaviour:
@@ -20457,7 +20594,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1150984537}
   m_Layer: 0
-  m_Name: Modelo_24_EnsaladaMixta_Plato
+  m_Name: Modelo_24_LentejasconCerdo_Plato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20648,7 +20785,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Huevo
+          m_StringArgument: Zanahoria
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1187847774
@@ -21008,150 +21145,150 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodCatalog
   slots:
-  - nombre: Arroz
+  - nombre: Pollo
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1388341313}
-    colorCrudo: {r: 0.93, g: 0.9, b: 0.82, a: 1}
-    colorCocido: {r: 0.93, g: 0.9, b: 0.82, a: 1}
-  - nombre: Arroz
+    colorCrudo: {r: 0.92, g: 0.7, b: 0.62, a: 1}
+    colorCocido: {r: 0.85, g: 0.65, b: 0.4, a: 1}
+  - nombre: Pollo
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 925297589}
-    colorCrudo: {r: 0.98, g: 0.97, b: 0.94, a: 1}
-    colorCocido: {r: 0.98, g: 0.97, b: 0.94, a: 1}
-  - nombre: Pasta
+    colorCrudo: {r: 0.92, g: 0.7, b: 0.62, a: 1}
+    colorCocido: {r: 0.85, g: 0.65, b: 0.4, a: 1}
+  - nombre: Res
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 725518098}
-    colorCrudo: {r: 0.9, g: 0.78, b: 0.45, a: 1}
-    colorCocido: {r: 0.9, g: 0.78, b: 0.45, a: 1}
-  - nombre: Pasta
+    colorCrudo: {r: 0.8, g: 0.25, b: 0.25, a: 1}
+    colorCocido: {r: 0.5, g: 0.22, b: 0.15, a: 1}
+  - nombre: Res
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 1335330286}
-    colorCrudo: {r: 0.96, g: 0.88, b: 0.62, a: 1}
-    colorCocido: {r: 0.96, g: 0.88, b: 0.62, a: 1}
-  - nombre: Pollo
+    colorCrudo: {r: 0.8, g: 0.25, b: 0.25, a: 1}
+    colorCocido: {r: 0.5, g: 0.22, b: 0.15, a: 1}
+  - nombre: Cerdo
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 2016654870}
-    colorCrudo: {r: 0.2, g: 0.62, b: 0.3, a: 1}
-    colorCocido: {r: 0.2, g: 0.62, b: 0.3, a: 1}
-  - nombre: Pollo
+    colorCrudo: {r: 0.93, g: 0.65, b: 0.63, a: 1}
+    colorCocido: {r: 0.72, g: 0.45, b: 0.35, a: 1}
+  - nombre: Cerdo
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 1949111613}
-    colorCrudo: {r: 0.55, g: 0.8, b: 0.55, a: 1}
-    colorCocido: {r: 0.55, g: 0.8, b: 0.55, a: 1}
-  - nombre: Res
+    colorCrudo: {r: 0.93, g: 0.65, b: 0.63, a: 1}
+    colorCocido: {r: 0.72, g: 0.45, b: 0.35, a: 1}
+  - nombre: Frijol Negro
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1014699736}
-    colorCrudo: {r: 0.65, g: 0.2, b: 0.22, a: 1}
-    colorCocido: {r: 0.65, g: 0.2, b: 0.22, a: 1}
-  - nombre: Res
+    colorCrudo: {r: 0.2, g: 0.18, b: 0.22, a: 1}
+    colorCocido: {r: 0.28, g: 0.22, b: 0.25, a: 1}
+  - nombre: Frijol Negro
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 2049554241}
-    colorCrudo: {r: 0.45, g: 0.24, b: 0.18, a: 1}
-    colorCocido: {r: 0.45, g: 0.24, b: 0.18, a: 1}
-  - nombre: Cerdo
+    colorCrudo: {r: 0.2, g: 0.18, b: 0.22, a: 1}
+    colorCocido: {r: 0.28, g: 0.22, b: 0.25, a: 1}
+  - nombre: Lentejas
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1495967489}
-    colorCrudo: {r: 0.85, g: 0.55, b: 0.55, a: 1}
-    colorCocido: {r: 0.85, g: 0.55, b: 0.55, a: 1}
-  - nombre: Cerdo
+    colorCrudo: {r: 0.65, g: 0.52, b: 0.3, a: 1}
+    colorCocido: {r: 0.55, g: 0.42, b: 0.22, a: 1}
+  - nombre: Lentejas
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 541919840}
-    colorCrudo: {r: 0.72, g: 0.48, b: 0.4, a: 1}
-    colorCocido: {r: 0.72, g: 0.48, b: 0.4, a: 1}
-  - nombre: Salmon
+    colorCrudo: {r: 0.65, g: 0.52, b: 0.3, a: 1}
+    colorCocido: {r: 0.55, g: 0.42, b: 0.22, a: 1}
+  - nombre: Garbanzos
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1589840614}
-    colorCrudo: {r: 0.95, g: 0.5, b: 0.4, a: 1}
-    colorCocido: {r: 0.95, g: 0.5, b: 0.4, a: 1}
-  - nombre: Salmon
+    colorCrudo: {r: 0.85, g: 0.75, b: 0.5, a: 1}
+    colorCocido: {r: 0.8, g: 0.68, b: 0.42, a: 1}
+  - nombre: Garbanzos
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 1970981726}
-    colorCrudo: {r: 0.9, g: 0.62, b: 0.5, a: 1}
-    colorCocido: {r: 0.9, g: 0.62, b: 0.5, a: 1}
-  - nombre: Atun
+    colorCrudo: {r: 0.85, g: 0.75, b: 0.5, a: 1}
+    colorCocido: {r: 0.8, g: 0.68, b: 0.42, a: 1}
+  - nombre: Espinaca
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 2069909471}
-    colorCrudo: {r: 0.8, g: 0.3, b: 0.32, a: 1}
-    colorCocido: {r: 0.8, g: 0.3, b: 0.32, a: 1}
-  - nombre: Atun
+    colorCrudo: {r: 0.18, g: 0.45, b: 0.2, a: 1}
+    colorCocido: {r: 0.14, g: 0.34, b: 0.15, a: 1}
+  - nombre: Espinaca
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 812237621}
-    colorCrudo: {r: 0.65, g: 0.42, b: 0.4, a: 1}
-    colorCocido: {r: 0.65, g: 0.42, b: 0.4, a: 1}
-  - nombre: Huevo
+    colorCrudo: {r: 0.18, g: 0.45, b: 0.2, a: 1}
+    colorCocido: {r: 0.14, g: 0.34, b: 0.15, a: 1}
+  - nombre: Zanahoria
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1870175578}
-    colorCrudo: {r: 0.97, g: 0.93, b: 0.85, a: 1}
-    colorCocido: {r: 0.97, g: 0.93, b: 0.85, a: 1}
-  - nombre: Huevo
+    colorCrudo: {r: 0.9, g: 0.5, b: 0.15, a: 1}
+    colorCocido: {r: 0.85, g: 0.55, b: 0.22, a: 1}
+  - nombre: Zanahoria
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 1391169522}
-    colorCrudo: {r: 0.99, g: 0.96, b: 0.8, a: 1}
-    colorCocido: {r: 0.99, g: 0.96, b: 0.8, a: 1}
+    colorCrudo: {r: 0.9, g: 0.5, b: 0.15, a: 1}
+    colorCocido: {r: 0.85, g: 0.55, b: 0.22, a: 1}
   - nombre: Papa
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1992794303}
-    colorCrudo: {r: 0.85, g: 0.75, b: 0.55, a: 1}
-    colorCocido: {r: 0.85, g: 0.75, b: 0.55, a: 1}
+    colorCrudo: {r: 0.85, g: 0.78, b: 0.6, a: 1}
+    colorCocido: {r: 0.92, g: 0.85, b: 0.62, a: 1}
   - nombre: Papa
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 1281516941}
-    colorCrudo: {r: 0.95, g: 0.88, b: 0.65, a: 1}
-    colorCocido: {r: 0.95, g: 0.88, b: 0.65, a: 1}
-  - nombre: Zanahoria
+    colorCrudo: {r: 0.85, g: 0.78, b: 0.6, a: 1}
+    colorCocido: {r: 0.92, g: 0.85, b: 0.62, a: 1}
+  - nombre: Calabacita
     estado: Crudo
     gramosReferencia: 100
     modelo: {fileID: 1549549139}
-    colorCrudo: {r: 0.9, g: 0.5, b: 0.18, a: 1}
-    colorCocido: {r: 0.9, g: 0.5, b: 0.18, a: 1}
-  - nombre: Zanahoria
+    colorCrudo: {r: 0.55, g: 0.72, b: 0.35, a: 1}
+    colorCocido: {r: 0.48, g: 0.62, b: 0.3, a: 1}
+  - nombre: Calabacita
     estado: Cocido
     gramosReferencia: 100
     modelo: {fileID: 247814572}
-    colorCrudo: {r: 0.95, g: 0.62, b: 0.3, a: 1}
-    colorCocido: {r: 0.95, g: 0.62, b: 0.3, a: 1}
-  - nombre: Guiso de Pollo
+    colorCrudo: {r: 0.55, g: 0.72, b: 0.35, a: 1}
+    colorCocido: {r: 0.48, g: 0.62, b: 0.3, a: 1}
+  - nombre: Arroz con Frijoles
     estado: Plato
     gramosReferencia: 100
     modelo: {fileID: 532986733}
-    colorCrudo: {r: 0.8, g: 0.62, b: 0.32, a: 1}
-    colorCocido: {r: 0.8, g: 0.62, b: 0.32, a: 1}
-  - nombre: Sopa de Verduras
+    colorCrudo: {r: 0.72, g: 0.62, b: 0.45, a: 1}
+    colorCocido: {r: 0.72, g: 0.62, b: 0.45, a: 1}
+  - nombre: Picadillo de Res
     estado: Plato
     gramosReferencia: 100
     modelo: {fileID: 1226520251}
-    colorCrudo: {r: 0.55, g: 0.68, b: 0.35, a: 1}
-    colorCocido: {r: 0.55, g: 0.68, b: 0.35, a: 1}
-  - nombre: Arroz con Pollo
+    colorCrudo: {r: 0.55, g: 0.3, b: 0.2, a: 1}
+    colorCocido: {r: 0.55, g: 0.3, b: 0.2, a: 1}
+  - nombre: Guisado de Pollo
     estado: Plato
     gramosReferencia: 100
     modelo: {fileID: 1235451146}
-    colorCrudo: {r: 0.88, g: 0.76, b: 0.45, a: 1}
-    colorCocido: {r: 0.88, g: 0.76, b: 0.45, a: 1}
-  - nombre: Ensalada Mixta
+    colorCrudo: {r: 0.78, g: 0.55, b: 0.28, a: 1}
+    colorCocido: {r: 0.78, g: 0.55, b: 0.28, a: 1}
+  - nombre: Lentejas con Cerdo
     estado: Plato
     gramosReferencia: 100
     modelo: {fileID: 1150984536}
-    colorCrudo: {r: 0.35, g: 0.7, b: 0.4, a: 1}
-    colorCocido: {r: 0.35, g: 0.7, b: 0.4, a: 1}
+    colorCrudo: {r: 0.52, g: 0.38, b: 0.22, a: 1}
+    colorCocido: {r: 0.52, g: 0.38, b: 0.22, a: 1}
 --- !u!114 &1194855162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21262,6 +21399,8 @@ MonoBehaviour:
   metasGrasaNumero: {fileID: 838641777}
   metasGrasaSufijo: {fileID: 60898509}
   menuLateral: {fileID: 338182735}
+  metasIdeal: {fileID: 184023590}
+  perfil: {fileID: 1194855162}
 --- !u!114 &1194855164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21463,7 +21602,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Pasta
+          m_StringArgument: Res
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1201023388
@@ -21566,7 +21705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1226520252}
   m_Layer: 0
-  m_Name: Modelo_22_SopadeVerduras_Plato
+  m_Name: Modelo_22_PicadillodeRes_Plato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21644,7 +21783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 41
+  m_text: 15
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -21819,7 +21958,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Atun
+          m_StringArgument: Espinaca
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1229943336
@@ -21917,7 +22056,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dfba749dabef8ac4b8008fd56b2267f3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 61faf345365af8c4791896269997574a, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -21945,7 +22084,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1235451147}
   m_Layer: 0
-  m_Name: Modelo_23_ArrozconPollo_Plato
+  m_Name: Modelo_23_GuisadodePollo_Plato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22137,7 +22276,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Cerdo
+          m_StringArgument: Lentejas
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1248523649
@@ -23443,14 +23582,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.65, g: 0.2, b: 0.22, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 3033571b9cfc8c24884067637450d3ec, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23695,7 +23834,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1335330287}
   m_Layer: 0
-  m_Name: Modelo_04_Pasta_Cocido
+  m_Name: Modelo_04_Res_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23766,14 +23905,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9, g: 0.5, b: 0.18, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: d5abd3d12e5aec5479501d37daca7e5a, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -24192,7 +24331,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Sopa de Verduras
+          m_StringArgument: Picadillo de Res
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1358061533
@@ -24681,7 +24820,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Pollo
+          m_StringArgument: Cerdo
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1375299389
@@ -25061,7 +25200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: kcal / 100 g
+  m_text: kcal
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -25143,7 +25282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1388341314}
   m_Layer: 0
-  m_Name: Modelo_01_Arroz_Crudo
+  m_Name: Modelo_01_Pollo_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25174,7 +25313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1391169523}
   m_Layer: 0
-  m_Name: Modelo_16_Huevo_Cocido
+  m_Name: Modelo_16_Zanahoria_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25252,7 +25391,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Res
+  m_text: Frijol Negro
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -25829,7 +25968,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 45
+  m_text: 220
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -26524,14 +26663,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.88, g: 0.76, b: 0.45, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 888f9e8a06287324691d6de467fe9861, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -27205,7 +27344,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Ensalada Mixta
+          m_StringArgument: Lentejas con Cerdo
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1482832017
@@ -27440,7 +27579,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 143
+  m_text: 35
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -27667,7 +27806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1495967490}
   m_Layer: 0
-  m_Name: Modelo_09_Cerdo_Crudo
+  m_Name: Modelo_09_Lentejas_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27972,7 +28111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1549549140}
   m_Layer: 0
-  m_Name: Modelo_19_Zanahoria_Crudo
+  m_Name: Modelo_19_Calabacita_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28118,14 +28257,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.97, g: 0.93, b: 0.85, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 0c7a001a3b516ae448f84c0988dfbf74, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -28232,7 +28371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Arroz
+  m_text: Pollo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -28808,7 +28947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1589840615}
   m_Layer: 0
-  m_Name: Modelo_11_Salmon_Crudo
+  m_Name: Modelo_11_Garbanzos_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29325,7 +29464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 208
+  m_text: 164
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -29736,7 +29875,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Guiso de Pollo
+  m_text: Arroz con Frijoles
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -29948,7 +30087,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pasta
+  m_text: Res
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -30179,7 +30318,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 145
+  m_text: 140
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -30425,10 +30564,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1010864373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 489.1437, y: -935.8114}
+  m_SizeDelta: {x: 698.2874, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1694576495
 MonoBehaviour:
@@ -30600,14 +30739,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.85, g: 0.55, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 6e82fd41bf3e031439323fa5426d305f, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -30857,7 +30996,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Zanahoria
+          m_StringArgument: Calabacita
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1719523789
@@ -31961,7 +32100,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 132
+  m_text: 23
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -32615,7 +32754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 165
+  m_text: 242
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -33401,7 +33540,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Salmon
+          m_StringArgument: Garbanzos
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1857442767
@@ -34030,7 +34169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1870175579}
   m_Layer: 0
-  m_Name: Modelo_15_Huevo_Crudo
+  m_Name: Modelo_15_Zanahoria_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34690,14 +34829,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.85, g: 0.75, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 76ea1c6fab85d42449100efeed4851fc, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -34748,10 +34887,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1010864373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 489.1437, y: -1119.8114}
+  m_SizeDelta: {x: 698.2874, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1902419373
 MonoBehaviour:
@@ -36092,7 +36231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1949111614}
   m_Layer: 0
-  m_Name: Modelo_06_Pollo_Cocido
+  m_Name: Modelo_06_Cerdo_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36406,7 +36545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 358
+  m_text: 165
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -36704,7 +36843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1970981727}
   m_Layer: 0
-  m_Name: Modelo_12_Salmon_Cocido
+  m_Name: Modelo_12_Garbanzos_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37110,7 +37249,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Res
+          m_StringArgument: Frijol Negro
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2008790208
@@ -37246,7 +37385,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Arroz
+          m_StringArgument: Pollo
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2009987919
@@ -37376,7 +37515,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2016654871}
   m_Layer: 0
-  m_Name: Modelo_05_Pollo_Crudo
+  m_Name: Modelo_05_Cerdo_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37584,14 +37723,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9, g: 0.78, b: 0.45, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: cde0417f3942070419b7ac0f3d6faf2c, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -37666,7 +37805,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 371
+  m_text: 250
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -38184,7 +38323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2049554242}
   m_Layer: 0
-  m_Name: Modelo_08_Res_Cocido
+  m_Name: Modelo_08_FrijolNegro_Cocido
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38588,7 +38727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2069909472}
   m_Layer: 0
-  m_Name: Modelo_13_Atun_Crudo
+  m_Name: Modelo_13_Espinaca_Crudo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39254,7 +39393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Arroz
+  m_text: Pollo
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -40178,12 +40317,13 @@ RectTransform:
   - {fileID: 1823758144}
   - {fileID: 838641775}
   - {fileID: 60898511}
+  - {fileID: 184023589}
   m_Father: {fileID: 2010008844}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -24, y: -224}
-  m_SizeDelta: {x: 460, y: 330}
+  m_SizeDelta: {x: 460, y: 380}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2144152517
 MonoBehaviour:

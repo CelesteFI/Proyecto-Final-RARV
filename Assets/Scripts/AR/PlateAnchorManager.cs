@@ -243,7 +243,8 @@ public sealed class PlateAnchorManager : MonoBehaviour
         // Coordenadas absolutas de mundo: el conjunto deja de ser hijo del XR Origin.
         DesvincularDeARCore();
 
-        // La pose se escribe SIEMPRE: el molde nunca queda apagado ni en el origen (0,0,0).
+        // La pose se escribe SIEMPRE (nunca en el origen 0,0,0), pero el molde sigue apagado: la
+        // comida solo aparece al pulsar "Servir en el plato".
         ColocarMolde(_poseAnclada);
         ColocarAros(_poseAnclada);
         MostrarConjunto();
@@ -706,10 +707,9 @@ public sealed class PlateAnchorManager : MonoBehaviour
 
     private void MostrarConjunto()
     {
-        if (moldeHolograma != null && !moldeHolograma.gameObject.activeSelf)
-        {
-            moldeHolograma.gameObject.SetActive(true);
-        }
+        // El molde de comida NO se enciende aqui: tras fijar el plato la vista muestra solo el aro
+        // fijado, y la comida aparece cuando el usuario pulsa "Servir en el plato"
+        // (MostrarComidaServida). Su pose ya queda escrita por FijarPlato.
 
         // Misma escala en los cuatro aros (la que fijo el slider) y herencia explicita 1:1 del aro
         // fijado respecto al que tenia la guia en este preciso instante.

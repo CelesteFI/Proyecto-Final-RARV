@@ -87,3 +87,5 @@ cline_docs/
 .env
 *.chat
 *.ai
+Aura*.cs
+Aura*.cs.meta
