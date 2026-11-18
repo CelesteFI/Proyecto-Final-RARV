@@ -50,6 +50,23 @@ public sealed class VolumeCalculator : MonoBehaviour
     }
 
     /// <summary>
+    /// Densidad de referencia del molde: el cilindro representa la MASA servida (1 g = 1 cm3 de
+    /// referencia), de modo que cambiar crudo/cocido altera los gramos de la misma porcion y con
+    /// ellos el tamano visible del molde.
+    /// </summary>
+    public const float DensidadDeReferenciaMasa = 1f;
+
+    /// <summary>
+    /// Escala del holograma dimensionada por la masa servida en gramos, con el radio recortado al
+    /// plato calibrado. Es la variante que usa ARUIManager: el molde crece con los gramos reales
+    /// (volumen del slider x densidad del alimento y estado elegidos) y no con el volumen fijo.
+    /// </summary>
+    public Vector3 CalculateLocalScaleDeMasa(float grams, float plateRadiusCm)
+    {
+        return CalculateLocalScale(DensidadDeReferenciaMasa, grams, plateRadiusCm);
+    }
+
+    /// <summary>
     /// Calcula la escala local (X y Z por radio, Y = CylinderScaleY) y reporta el radio real
     /// usado. false si la densidad o la masa no son validas.
     /// </summary>

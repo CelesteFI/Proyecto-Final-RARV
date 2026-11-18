@@ -266,16 +266,16 @@ public sealed class ARUIManager : MonoBehaviour
 
         if (aplicarAlMolde)
         {
-            AplicarModeloYEscala(AlimentoActual, cocido, gramos, densidad);
+            AplicarModeloYEscala(AlimentoActual, cocido, gramos);
         }
     }
 
     /// <summary>
     /// Escribe en el molde el alimento, el estado y la porcion indicados: elige el slot del catalogo
-    /// (o el cilindro parametrico) y aplica la escala. Es el unico punto que cambia el alimento del
-    /// modelo 3D, y solo lo llaman "Servir en el plato" y el Toggle crudo/cocido ya servido.
+    /// (o el cilindro parametrico) y aplica la escala por MASA servida. Es el unico punto que cambia
+    /// el alimento del modelo 3D, y solo lo llaman "Servir en el plato" y el Toggle crudo/cocido.
     /// </summary>
-    private void AplicarModeloYEscala(string nombre, bool cocido, float gramos, float densidad)
+    private void AplicarModeloYEscala(string nombre, bool cocido, float gramos)
     {
         FoodModelSlot slot = null;
         bool haySlot = catalog != null && catalog.TryGetSlot(nombre, cocido, out slot);
@@ -311,7 +311,7 @@ public sealed class ARUIManager : MonoBehaviour
 
         float radioPlato = ARState.HasPlate ? ARState.SelectedPlateRadius : ARState.DefaultPlateRadiusCm;
 
-        moldeHolograma.localScale = calculator.CalculateLocalScale(densidad, gramos, radioPlato);
+        moldeHolograma.localScale = calculator.CalculateLocalScaleDeMasa(gramos, radioPlato);
     }
 
     /// <summary>
@@ -332,7 +332,7 @@ public sealed class ARUIManager : MonoBehaviour
 
         if (cambiarSlot)
         {
-            AplicarModeloYEscala(_alimentoServido, _cocidoServido, gramos, densidad);
+            AplicarModeloYEscala(_alimentoServido, _cocidoServido, gramos);
             return;
         }
 
@@ -349,7 +349,7 @@ public sealed class ARUIManager : MonoBehaviour
 
         float radioPlato = ARState.HasPlate ? ARState.SelectedPlateRadius : ARState.DefaultPlateRadiusCm;
 
-        moldeHolograma.localScale = calculator.CalculateLocalScale(densidad, gramos, radioPlato);
+        moldeHolograma.localScale = calculator.CalculateLocalScaleDeMasa(gramos, radioPlato);
     }
 
     /// <summary>Densidad aparente (g/cm3) del alimento en el estado elegido; 1 g/cm3 si falta.</summary>

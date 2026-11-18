@@ -89,3 +89,5 @@ cline_docs/
 *.ai
 Aura*.cs
 Aura*.cs.meta
+Aura*.png
+Aura*.png.meta
