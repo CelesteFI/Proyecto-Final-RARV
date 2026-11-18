@@ -34,6 +34,8 @@ public sealed class ARUIManager : MonoBehaviour
     [SerializeField] private Transform moldeHolograma;
     [SerializeField] private MeshRenderer moldeRenderer;
     [SerializeField] private FoodCatalog catalog;
+    [Tooltip("Anclaje del plato: garantiza que el molde servido quede visible apoyado en la mesa.")]
+    [SerializeField] private PlateAnchorManager plateAnchor;
 
     [Header("Color del molde parametrico")]
     [Tooltip("Color del cilindro cuando el alimento no tiene color propio en el catalogo.")]
@@ -59,6 +61,22 @@ public sealed class ARUIManager : MonoBehaviour
     [SerializeField] private TMP_Text detalleGrasaNumero;
     [SerializeField] private TMP_Text detalleGrasaSufijo;
 
+    [Header("Recuadro de metas del Panel AR (Kcal del alimento elegido)")]
+    [Tooltip("Miniatura del alimento que muestra el recuadro superior derecho del Panel_AR.")]
+    [SerializeField] private Image metasIcono;
+    [SerializeField] private TMP_Text metasNombre;
+    [SerializeField] private TMP_Text metasKcalNumero;
+    [SerializeField] private TMP_Text metasKcalSufijo;
+    [SerializeField] private TMP_Text metasProteinaNumero;
+    [SerializeField] private TMP_Text metasProteinaSufijo;
+    [SerializeField] private TMP_Text metasCarboNumero;
+    [SerializeField] private TMP_Text metasCarboSufijo;
+    [SerializeField] private TMP_Text metasGrasaNumero;
+    [SerializeField] private TMP_Text metasGrasaSufijo;
+
+    [Tooltip("Menu lateral flotante: se cierra al servir para dejar ver el plato.")]
+    [SerializeField] private MenuLateralARController menuLateral;
+
     // Alimento abierto ahora mismo en el sub-panel de detalle.
     private string _alimentoDetalle = string.Empty;
 
@@ -70,6 +88,9 @@ public sealed class ARUIManager : MonoBehaviour
 
     /// <summary>true si se esta mostrando un modelo del catalogo en lugar del cilindro de prueba.</summary>
     public bool UsandoModeloDelCatalogo { get; private set; }
+
+    /// <summary>Alimento elegido ahora mismo en el dropdown del Panel_AR.</summary>
+    public string AlimentoSeleccionado => ObtenerAlimentoActual();
 
     /// <summary>Estado de coccion elegido en la UI: lo leen el catalogo y el sub-panel de detalle.</summary>
     public bool EstadoCocidoActual => toggleCocido != null && toggleCocido.isOn;
@@ -129,6 +150,9 @@ public sealed class ARUIManager : MonoBehaviour
 
         bool cocido = toggleCocido != null && toggleCocido.isOn;
         float gramos = sliderGramos != null ? sliderGramos.value : 0f;
+
+        // El recuadro de metas del Panel_AR muestra siempre las Kcal base del alimento elegido.
+        RefrescarMetasDelAlimento(cocido);
 
         // La etiqueta refleja siempre los gramos pedidos, con modelo del catalogo o con el cilindro.
         // Modularidad: el numero y el sufijo van en dos TextMeshProUGUI distintos.
@@ -254,30 +278,26 @@ public sealed class ARUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Boton "Servir en el plato" del detalle: selecciona el alimento en el dropdown (eso ya
-    /// refresca escala y color), cierra el detalle y regresa a la vista AR.
+    /// Boton "Servir en el plato" del Panel_AR: aplica el alimento y los gramos elegidos al molde,
+    /// lo deja visible sobre el plato anclado y cierra el menu lateral para dejar el plato a la vista.
     /// </summary>
     public void ServirEnElPlato()
     {
-        if (string.IsNullOrEmpty(_alimentoDetalle))
+        ActualizarMolde();
+
+        // El molde ya escalado se coloca en el plato fijado y se enciende: servirlo nunca deja la
+        // vista vacia aunque el anclaje se hubiera reiniciado al pasar por la calibracion.
+        if (plateAnchor != null)
         {
-            return;
+            plateAnchor.MostrarComidaServida();
         }
 
-        int indice = IndiceDeAlimento(_alimentoDetalle);
-
-        if (indice >= 0 && dropdownAlimentos != null)
+        if (menuLateral != null && menuLateral.Abierto)
         {
-            // Notifica: onValueChanged pone al dia el molde, el color y el bloqueo de coccion.
-            dropdownAlimentos.value = indice;
+            menuLateral.Cerrar();
         }
 
-        CerrarDetalle();
-
-        if (menu != null)
-        {
-            menu.MostrarAR();
-        }
+        Debug.Log("[ARUIManager] Servido en el plato: '" + AlimentoActual + "'.", this);
     }
 
     /// <summary>Escribe titulo, energia y macros del alimento en los TMP ya serializados.</summary>
@@ -327,6 +347,52 @@ public sealed class ARUIManager : MonoBehaviour
         Escribir(detalleGrasaSufijo, "g");
     }
 
+    /// <summary>
+    /// Recuadro de metas del Panel_AR: escribe el nombre, las Kcal base por 100 g y los macros del
+    /// alimento elegido en el dropdown. Cada cifra y su unidad viven en TMP distintos.
+    /// </summary>
+    private void RefrescarMetasDelAlimento(bool cocido)
+    {
+        string nombre = AlimentoActual;
+
+        Escribir(metasNombre, string.IsNullOrEmpty(nombre) ? "--" : nombre);
+
+        if (metasIcono != null)
+        {
+            Sprite miniatura = MiniaturaDeAlimento(nombre);
+
+            if (miniatura != null)
+            {
+                metasIcono.sprite = miniatura;
+                metasIcono.color = Color.white;
+            }
+            else
+            {
+                metasIcono.color = catalog != null && catalog.TryGetColor(nombre, cocido, out Color color)
+                    ? color
+                    : colorPorDefecto;
+            }
+        }
+
+        if (!FoodNutritionData.TryGetNutrition(nombre, out FoodNutrition info))
+        {
+            Escribir(metasKcalNumero, "--");
+            Escribir(metasProteinaNumero, "--");
+            Escribir(metasCarboNumero, "--");
+            Escribir(metasGrasaNumero, "--");
+            return;
+        }
+
+        Escribir(metasKcalNumero, Mathf.RoundToInt(info.Kcal(cocido)).ToString(CultureInfo.InvariantCulture));
+        Escribir(metasKcalSufijo, "kcal / 100 g");
+        Escribir(metasProteinaNumero, info.Proteina(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        Escribir(metasProteinaSufijo, "g");
+        Escribir(metasCarboNumero, info.Carbohidrato(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        Escribir(metasCarboSufijo, "g");
+        Escribir(metasGrasaNumero, info.Grasa(cocido).ToString("F1", CultureInfo.InvariantCulture));
+        Escribir(metasGrasaSufijo, "g");
+    }
+
     private static void Escribir(TMP_Text campo, string valor)
     {
         if (campo != null)
@@ -354,6 +420,19 @@ public sealed class ARUIManager : MonoBehaviour
         }
 
         return -1;
+    }
+
+    /// <summary>Miniatura del alimento elegido: la misma imagen que muestra el dropdown.</summary>
+    private Sprite MiniaturaDeAlimento(string nombre)
+    {
+        int indice = IndiceDeAlimento(nombre);
+
+        if (indice < 0)
+        {
+            return null;
+        }
+
+        return dropdownAlimentos.options[indice].image;
     }
 
     /// <summary>Pinta el material del cilindro sin instanciar materiales ni objetos nuevos.</summary>
@@ -407,6 +486,12 @@ public sealed class ARUIManager : MonoBehaviour
         if (catalog == null)
         {
             Debug.LogWarning("[ARUIManager] Sin FoodCatalog: se usara siempre el cilindro parametrico de prueba.", this);
+        }
+
+        if (plateAnchor == null)
+        {
+            Debug.LogWarning("[ARUIManager] Sin PlateAnchorManager: servir en el plato no puede colocar el molde " +
+                             "sobre la mesa fijada.", this);
         }
 
         return valido;

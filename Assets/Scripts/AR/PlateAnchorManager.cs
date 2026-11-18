@@ -56,6 +56,13 @@ public sealed class PlateAnchorManager : MonoBehaviour
     [Tooltip("Coseno maximo admitido entre la normal del plano y la vertical: 0.87 ~ 30 grados de inclinacion.")]
     [SerializeField, Range(0f, 1f)] private float cosenoMaxInclinacion = 0.87f;
 
+    [Header("Respaldo si ARCore aun no detecta la mesa")]
+    [Tooltip("Distancia delante de la camara a la que se fija el plato mientras no hay plano detectado.")]
+    [SerializeField, Min(0.1f)] private float distanciaRespaldoFrente = 0.6f;
+
+    [Tooltip("Altura por debajo de la camara a la que se fija el plato de respaldo, en metros.")]
+    [SerializeField, Min(0f)] private float alturaRespaldoBajoCamara = 0.3f;
+
     // Buffer reutilizado: cero asignaciones por frame.
     private readonly List<ARRaycastHit> _impactos = new List<ARRaycastHit>(8);
 
@@ -81,6 +88,12 @@ public sealed class PlateAnchorManager : MonoBehaviour
 
     // Radio que el usuario esta ajustando en el slider de calibracion (cm), aun sin confirmar.
     private float _radioVisualCm;
+
+    // Ultima escala aplicada a los aros: la hereda el aro fijado tal cual al pulsar Fijar Plato.
+    private float _escalaAros = 1f;
+
+    /// <summary>Escala vigente de los aros (diametro del plato / radio pintado en el sprite).</summary>
+    public float EscalaAros => _escalaAros;
 
     /// <summary>true cuando el plato ya esta anclado y el conjunto no vuelve a moverse.</summary>
     public bool Fijado => _fijado;
@@ -108,8 +121,21 @@ public sealed class PlateAnchorManager : MonoBehaviour
         // En la escena el molde arranca oculto: nada de hologramas en splash, menu ni calibracion.
         OcultarConjunto();
 
+        // El canvas de los aros es de mundo: se le da la camara AR para que dibuje y ordene con ella.
+        // No crea objetos: solo rellena la referencia si estaba vacia.
+        Canvas canvasAros = arosRaiz != null ? arosRaiz.GetComponent<Canvas>() : null;
+
+        if (canvasAros != null && canvasAros.worldCamera == null && camaraAR != null)
+        {
+            canvasAros.worldCamera = camaraAR;
+        }
+
         // En la vista AR el boton "Fijar Plato" ya no ancla: devuelve a reajustar el tamano.
         btnFijarPlato.onClick.AddListener(VolverACalibracion);
+
+        Debug.Log("[PlateAnchorManager] Listo: molde=" + (moldeHolograma != null ? moldeHolograma.name : "SIN ASIGNAR") +
+                  ", aros=" + ContarArosAsignados() + "/4, camara=" + (camaraAR != null ? camaraAR.name : "SIN ASIGNAR") +
+                  ", raycast=" + (raycastManager != null ? "ok" : "SIN ASIGNAR") + ".", this);
     }
 
     private void OnDestroy()
@@ -137,6 +163,14 @@ public sealed class PlateAnchorManager : MonoBehaviour
 
         if (!TryRaycastCentro(out Pose pose))
         {
+            // ARCore puede tardar varios segundos en reportar la mesa bajo el centro de pantalla.
+            // Mientras tanto la guia se dibuja delante de la camara: el usuario siempre ve el plato
+            // calibrado y nunca se queda con la vista vacia. El molde sigue oculto hasta fijar.
+            if (TryPoseDeRespaldo(out Pose respaldo))
+            {
+                ColocarAros(respaldo);
+            }
+
             return;
         }
 
@@ -171,6 +205,7 @@ public sealed class PlateAnchorManager : MonoBehaviour
     public void FijarPlato()
     {
         Pose pose;
+        string origen;
 
         // Cada anclaje arranca con la comida centrada en el plato.
         _desplazamientoComida = Vector2.zero;
@@ -181,23 +216,23 @@ public sealed class PlateAnchorManager : MonoBehaviour
             // Camino normal: hay mesa horizontal bajo el centro de pantalla.
             _ultimaPose = pose;
             _hayPose = true;
+            origen = "el plano horizontal bajo el centro de pantalla";
         }
         else if (_hayPose)
         {
             // Sin impacto justo ahora (p. ej. el plano salio de cuadro): se respeta la ultima superficie.
             pose = _ultimaPose;
-            Debug.LogWarning("[PlateAnchorManager] Al fijar no habia plano horizontal bajo el centro de " +
-                             "pantalla: se ancla el plato en la ultima superficie detectada.", this);
+            origen = "la ultima superficie detectada";
+        }
+        else if (TryPoseDeRespaldo(out pose))
+        {
+            // ARCore aun no ha reportado la mesa: el plato se fija delante de la camara en lugar de
+            // quedarse apagado en el origen de la escena. El molde y el aro fijado se ven SIEMPRE.
+            origen = "el respaldo delante de la camara (aun sin plano detectado)";
         }
         else
         {
-            // Editor o dispositivo sin planos todavia: no se inventa una normal, se respeta el molde.
-            Debug.LogWarning("[PlateAnchorManager] No hay superficie horizontal detectada: el plato queda " +
-                             "anclado en la posicion actual del molde. Escanea la mesa y vuelve a fijar.", this);
-            _hayPoseAnclada = false;
-            _fijado = true;
-            DesvincularDeARCore();
-            MostrarConjunto();
+            Debug.LogError("[PlateAnchorManager] Sin camara AR ni plano detectado: no hay donde fijar el plato.", this);
             return;
         }
 
@@ -208,9 +243,46 @@ public sealed class PlateAnchorManager : MonoBehaviour
         // Coordenadas absolutas de mundo: el conjunto deja de ser hijo del XR Origin.
         DesvincularDeARCore();
 
+        // La pose se escribe SIEMPRE: el molde nunca queda apagado ni en el origen (0,0,0).
         ColocarMolde(_poseAnclada);
         ColocarAros(_poseAnclada);
         MostrarConjunto();
+
+        Debug.Log("[PlateAnchorManager] Plato fijado con " + origen +
+                  ". Molde activo en " + (moldeHolograma != null ? moldeHolograma.position.ToString("F3") : "sin molde") +
+                  ", aro fijado en " + (arosRaiz != null ? arosRaiz.position.ToString("F3") : "sin aros") +
+                  ", escala " + _escalaAros.ToString("F4") + ".", this);
+    }
+
+    /// <summary>
+    /// Boton "Servir en el plato": garantiza que el molde, ya escalado por ARUIManager, quede visible
+    /// apoyado en el plato anclado. Si el plato todavia no estaba fijado se fija en ese momento con la
+    /// misma resolucion de pose que la calibracion: nunca se sirve en el origen de la escena.
+    /// </summary>
+    public void MostrarComidaServida()
+    {
+        if (moldeHolograma == null)
+        {
+            return;
+        }
+
+        if (!_fijado)
+        {
+            FijarPlato();
+        }
+
+        if (!_fijado)
+        {
+            return;
+        }
+
+        // Posicion definitiva (centro del plato mas el desplazamiento tactil) y visibilidad.
+        AplicarPoseComida();
+
+        if (!moldeHolograma.gameObject.activeSelf)
+        {
+            moldeHolograma.gameObject.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -287,6 +359,29 @@ public sealed class PlateAnchorManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Pose de respaldo cuando ARCore todavia no reporta la mesa: horizontal, delante de la camara y
+    /// algo por debajo de los ojos, que es donde el usuario espera apoyar el plato. No sustituye al
+    /// plano detectado: en cuanto hay impacto, el raycast manda.
+    /// </summary>
+    private bool TryPoseDeRespaldo(out Pose pose)
+    {
+        pose = Pose.identity;
+
+        if (camaraAR == null)
+        {
+            return false;
+        }
+
+        // Solo el giro en Y: el plato queda siempre tumbado sobre un plano horizontal.
+        Vector3 adelante = Quaternion.Euler(0f, camaraAR.transform.eulerAngles.y, 0f) * Vector3.forward;
+        Vector3 posicion = camaraAR.transform.position + (adelante * distanciaRespaldoFrente) -
+                           (Vector3.up * alturaRespaldoBajoCamara);
+
+        pose = new Pose(posicion, Quaternion.identity);
+        return true;
     }
 
     /// <summary>
@@ -524,10 +619,26 @@ public sealed class PlateAnchorManager : MonoBehaviour
     {
         bool cuadrado = ARState.EsPlatoCuadrado;
 
-        ConmutarAro(spriteGuiaCircular, !cuadrado && !_fijado);
-        ConmutarAro(spriteGuiaCuadrado, cuadrado && !_fijado);
-        ConmutarAro(spriteFijadoCircular, !cuadrado && _fijado);
-        ConmutarAro(spriteFijadoCuadrado, cuadrado && _fijado);
+        // Regla binaria por forma: la guia de la forma contraria y el fijado de la forma contraria
+        // se apagan siempre; de la forma activa se enciende la guia o el fijado, nunca los dos.
+        ConmutarAro(cuadrado ? spriteGuiaCircular : spriteGuiaCuadrado, false);
+        ConmutarAro(cuadrado ? spriteFijadoCircular : spriteFijadoCuadrado, false);
+
+        ConmutarAro(cuadrado ? spriteGuiaCuadrado : spriteGuiaCircular, !_fijado);
+        ConmutarAro(cuadrado ? spriteFijadoCuadrado : spriteFijadoCircular, _fijado);
+    }
+
+    /// <summary>Numero de aros con referencia serializada (lectura para la traza de arranque).</summary>
+    private int ContarArosAsignados()
+    {
+        int total = 0;
+
+        if (spriteGuiaCircular != null) total++;
+        if (spriteFijadoCircular != null) total++;
+        if (spriteGuiaCuadrado != null) total++;
+        if (spriteFijadoCuadrado != null) total++;
+
+        return total;
     }
 
     private static void ConmutarAro(GameObject aro, bool activo)
@@ -539,21 +650,44 @@ public sealed class PlateAnchorManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Escala los 4 aros con la misma formula: diametro del plato dividido por el radio pintado
-    /// en el sprite. Guia y fijado comparten escala, asi que el cambio de estado es 1:1.
+    /// Escala los 4 aros con la MISMA formula y el MISMO valor: diametro del plato dividido por el
+    /// radio pintado en el sprite. La raiz comun solo posiciona (escala 1) y el valor se escribe en
+    /// el Transform de cada aro, de modo que al fijar el plato el aro fijado hereda exactamente la
+    /// escala que tenia la guia en ese instante (cambio 1:1, sin prefabs ni instanciacion).
     /// </summary>
     private void EscalarAros()
     {
-        if (arosRaiz == null)
-        {
-            return;
-        }
-
         float radio = RadioPlatoM();
         float fraccion = radioPintadoAro > 0.01f ? radioPintadoAro : 1f;
         float escala = (2f * radio) / fraccion;
 
-        arosRaiz.localScale = new Vector3(escala, escala, escala);
+        _escalaAros = escala;
+
+        if (arosRaiz != null && arosRaiz.localScale != Vector3.one)
+        {
+            arosRaiz.localScale = Vector3.one;
+        }
+
+        EscalarAro(spriteGuiaCircular, escala);
+        EscalarAro(spriteFijadoCircular, escala);
+        EscalarAro(spriteGuiaCuadrado, escala);
+        EscalarAro(spriteFijadoCuadrado, escala);
+    }
+
+    private static void EscalarAro(GameObject aro, float escala)
+    {
+        if (aro == null)
+        {
+            return;
+        }
+
+        Transform t = aro.transform;
+        Vector3 actual = t.localScale;
+
+        if (!Mathf.Approximately(actual.x, escala) || !Mathf.Approximately(actual.z, escala))
+        {
+            t.localScale = new Vector3(escala, escala, escala);
+        }
     }
 
     /// <summary>Sitúa la raiz de los aros tumbada sobre la superficie detectada.</summary>
@@ -577,8 +711,34 @@ public sealed class PlateAnchorManager : MonoBehaviour
             moldeHolograma.gameObject.SetActive(true);
         }
 
-        AplicarEstadoAros();
+        // Misma escala en los cuatro aros (la que fijo el slider) y herencia explicita 1:1 del aro
+        // fijado respecto al que tenia la guia en este preciso instante.
         EscalarAros();
+        HeredarEscalaDelAroGuia();
+        AplicarEstadoAros();
+    }
+
+    /// <summary>
+    /// El aro fijado que se enciende copia el localScale que tenia la guia justo antes de apagarse,
+    /// de modo que el cambio guia -> fijado es exactamente 1:1 y nunca se ve un salto de tamano.
+    /// </summary>
+    private void HeredarEscalaDelAroGuia()
+    {
+        bool cuadrado = ARState.EsPlatoCuadrado;
+        GameObject guia = cuadrado ? spriteGuiaCuadrado : spriteGuiaCircular;
+        GameObject fijado = cuadrado ? spriteFijadoCuadrado : spriteFijadoCircular;
+
+        if (guia == null || fijado == null)
+        {
+            return;
+        }
+
+        Vector3 escala = guia.transform.localScale;
+
+        if (escala.sqrMagnitude > 0.0001f)
+        {
+            fijado.transform.localScale = escala;
+        }
     }
 
     private void OcultarConjunto()

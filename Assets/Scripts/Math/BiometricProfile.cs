@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,9 +37,34 @@ public sealed class BiometricProfile : MonoBehaviour
     [SerializeField] private TMP_Dropdown DropdownSexo;      // 0 = Masculino, 1 = Femenino
     [SerializeField] private TMP_Dropdown DropdownActividad; // indice dentro de FactoresActividad
 
-    [Header("Interaccion y salida")]
+    [Header("Interaccion")]
     [SerializeField] private Button BtnCalcular;
-    [SerializeField] private TMP_Text TextoResultados;
+
+    [Header("Resultados modulares (Panel Perfil)")]
+    [Tooltip("Frase de entrada del bloque de resultados.")]
+    [SerializeField] private TMP_Text resultadoTitulo;
+    [Tooltip("Resumen de una linea con el peso y el factor de actividad usados.")]
+    [SerializeField] private TMP_Text resultadoEstado;
+    [SerializeField] private TMP_Text kcalTitulo;
+    [SerializeField] private TMP_Text kcalNumero;
+    [SerializeField] private TMP_Text kcalSufijo;
+    [SerializeField] private TMP_Text proteinaTitulo;
+    [SerializeField] private TMP_Text proteinaNumero;
+    [SerializeField] private TMP_Text proteinaSufijo;
+    [SerializeField] private TMP_Text carboTitulo;
+    [SerializeField] private TMP_Text carboNumero;
+    [SerializeField] private TMP_Text carboSufijo;
+    [SerializeField] private TMP_Text grasaTitulo;
+    [SerializeField] private TMP_Text grasaNumero;
+    [SerializeField] private TMP_Text grasaSufijo;
+    [Tooltip("Desglose secundario: gasto en reposo (TMB).")]
+    [SerializeField] private TMP_Text tmbTitulo;
+    [SerializeField] private TMP_Text tmbNumero;
+    [SerializeField] private TMP_Text tmbSufijo;
+    [Tooltip("Comparacion con la meta de peso, si se indico.")]
+    [SerializeField] private TMP_Text metaPesoTexto;
+    [Tooltip("Avisos de validacion (campos vacios, valores fuera de rango...).")]
+    [SerializeField] private TMP_Text avisoTexto;
 
     [Header("Meta de peso (opcional)")]
     [Tooltip("Si se rellena, el panel de metas de la vista AR se activa y compara con el peso actual.")]
@@ -73,8 +97,6 @@ public sealed class BiometricProfile : MonoBehaviour
     [SerializeField] private Vector2 rangoPeso = new Vector2(20f, 400f);
     [SerializeField] private Vector2 rangoAltura = new Vector2(80f, 250f);
     [SerializeField] private Vector2 rangoActividad = new Vector2(1f, 2.5f);
-
-    private readonly StringBuilder _buffer = new StringBuilder(192);
 
     /// <summary>true cuando el perfil tiene un peso objetivo valido (activa el panel de metas).</summary>
     public bool TienePesoObjetivo { get; private set; }
@@ -143,17 +165,12 @@ public sealed class BiometricProfile : MonoBehaviour
         TienePesoObjetivo = TryLeerPesoObjetivo(out float pesoObjetivo);
         PesoObjetivoKg = TienePesoObjetivo ? pesoObjetivo : 0f;
 
-        _buffer.Clear();
-        _buffer.Append("TMB (Mifflin-St Jeor): ").Append(tmb.ToString("F0", CultureInfo.InvariantCulture)).Append(" kcal/dia\n");
-        _buffer.Append("Gasto total (x").Append(actividad.ToString("F2", CultureInfo.InvariantCulture)).Append("): ")
-               .Append(gastoTotal.ToString("F0", CultureInfo.InvariantCulture)).Append(" kcal/dia\n\n");
-        _buffer.Append("Proteinas (30%): ").Append(gramosProteina.ToString("F0", CultureInfo.InvariantCulture)).Append(" g\n");
-        _buffer.Append("Carbohidratos (40%): ").Append(gramosCarbohidrato.ToString("F0", CultureInfo.InvariantCulture)).Append(" g\n");
-        _buffer.Append("Grasas (30%): ").Append(gramosGrasa.ToString("F0", CultureInfo.InvariantCulture)).Append(" g");
+        EscribirResultados(peso, sexoActual, actividad, tmb, gastoTotal,
+                          gramosProteina, gramosCarbohidrato, gramosGrasa);
 
         AnexarMeta(peso, pesoObjetivo);
 
-        TextoResultados.text = _buffer.ToString();
+        Escribir(avisoTexto, string.Empty);
 
         // Las tres sub-tarjetas del dashboard de metas leen estos valores ya calculados.
         RefrescarDashboard();
@@ -191,6 +208,40 @@ public sealed class BiometricProfile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Escribe el bloque de resultados del Panel Perfil. Cada titulo, cifra y unidad tiene su
+    /// propio TextMeshProUGUI para que se pueda reestilizar por separado desde el Inspector.
+    /// </summary>
+    private void EscribirResultados(float peso, Sexo sexo, float actividad, float tmb, float gastoTotal,
+                                    float gramosProteina, float gramosCarbohidrato, float gramosGrasa)
+    {
+        Escribir(resultadoTitulo, "Tu meta diaria sugerida es:");
+        Escribir(resultadoEstado,
+                 peso.ToString("F1", CultureInfo.InvariantCulture) + " kg · " +
+                 (sexo == Sexo.Masculino ? "hombre" : "mujer") + " · actividad x" +
+                 actividad.ToString("F2", CultureInfo.InvariantCulture));
+
+        Escribir(kcalTitulo, "Calorias al dia");
+        Escribir(kcalNumero, gastoTotal.ToString("F0", CultureInfo.InvariantCulture));
+        Escribir(kcalSufijo, "kcal");
+
+        Escribir(proteinaTitulo, "Proteinas");
+        Escribir(proteinaNumero, gramosProteina.ToString("F0", CultureInfo.InvariantCulture));
+        Escribir(proteinaSufijo, "g");
+
+        Escribir(carboTitulo, "Carbohidratos");
+        Escribir(carboNumero, gramosCarbohidrato.ToString("F0", CultureInfo.InvariantCulture));
+        Escribir(carboSufijo, "g");
+
+        Escribir(grasaTitulo, "Grasas");
+        Escribir(grasaNumero, gramosGrasa.ToString("F0", CultureInfo.InvariantCulture));
+        Escribir(grasaSufijo, "g");
+
+        Escribir(tmbTitulo, "Gasto en reposo (TMB)");
+        Escribir(tmbNumero, tmb.ToString("F0", CultureInfo.InvariantCulture));
+        Escribir(tmbSufijo, "kcal");
+    }
+
     private static void Escribir(TMP_Text campo, string valor)
     {
         if (campo != null)
@@ -199,27 +250,26 @@ public sealed class BiometricProfile : MonoBehaviour
         }
     }
 
-    /// <summary>Anade al informe la meta de peso y la distancia que falta por recorrer.</summary>
+    /// <summary>Escribe la meta de peso y la distancia que falta por recorrer.</summary>
     private void AnexarMeta(float pesoActual, float pesoObjetivo)
     {
         if (!TienePesoObjetivo)
         {
+            Escribir(metaPesoTexto, string.Empty);
             return;
         }
 
         float diferencia = pesoObjetivo - pesoActual;
-
-        _buffer.Append("\n\nMeta de peso: ").Append(pesoObjetivo.ToString("F1", CultureInfo.InvariantCulture)).Append(" kg");
+        string meta = "Meta de peso: " + pesoObjetivo.ToString("F1", CultureInfo.InvariantCulture) + " kg";
 
         if (Mathf.Abs(diferencia) < 0.05f)
         {
-            _buffer.Append("\nObjetivo alcanzado con el peso actual");
+            Escribir(metaPesoTexto, meta + " · objetivo alcanzado");
             return;
         }
 
-        _buffer.Append(diferencia > 0f ? "\nFaltan " : "\nSobran ")
-               .Append(Mathf.Abs(diferencia).ToString("F1", CultureInfo.InvariantCulture))
-               .Append(" kg para la meta");
+        Escribir(metaPesoTexto, meta + (diferencia > 0f ? " · faltan " : " · sobran ") +
+                                 Mathf.Abs(diferencia).ToString("F1", CultureInfo.InvariantCulture) + " kg");
     }
 
     /// <summary>Peso objetivo opcional: vacio o fuera de rango deja el panel de metas oculto.</summary>
@@ -341,7 +391,11 @@ public sealed class BiometricProfile : MonoBehaviour
         valido &= Validar(DropdownSexo, nameof(DropdownSexo));
         valido &= Validar(DropdownActividad, nameof(DropdownActividad));
         valido &= Validar(BtnCalcular, nameof(BtnCalcular));
-        valido &= Validar(TextoResultados, nameof(TextoResultados));
+        valido &= Validar(resultadoTitulo, nameof(resultadoTitulo));
+        valido &= Validar(kcalNumero, nameof(kcalNumero));
+        valido &= Validar(proteinaNumero, nameof(proteinaNumero));
+        valido &= Validar(carboNumero, nameof(carboNumero));
+        valido &= Validar(grasaNumero, nameof(grasaNumero));
 
         return valido;
     }
@@ -359,9 +413,9 @@ public sealed class BiometricProfile : MonoBehaviour
 
     private void Reportar(string mensaje)
     {
-        if (TextoResultados != null)
+        if (avisoTexto != null)
         {
-            TextoResultados.text = "ERROR: " + mensaje;
+            avisoTexto.text = "Revisa los datos: " + mensaje;
         }
 
         Debug.LogWarning("[BiometricProfile] " + mensaje, this);
