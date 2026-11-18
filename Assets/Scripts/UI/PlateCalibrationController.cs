@@ -84,6 +84,12 @@ public sealed class PlateCalibrationController : MonoBehaviour
             circuloGuia.sizeDelta = new Vector2(diametroPx, diametroPx);
         }
 
+        // El aro AR de la mesa (guia dinamica) usa exactamente el mismo radio que el slider.
+        if (plateAnchor != null)
+        {
+            plateAnchor.EstablecerRadioVisual(radioCm);
+        }
+
         if (textoRadioPlato != null)
         {
             textoRadioPlato.text = "Radio del plato: " + radioCm.ToString("F1") +

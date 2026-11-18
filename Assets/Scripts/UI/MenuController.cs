@@ -1,10 +1,12 @@
+using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Router de pantallas de NutriAR. Los seis paneles existen en la jerarquia del Canvas:
-/// solo se conmutan con SetActive (cero instanciacion en runtime) y, en el mismo punto unico
-/// de conmutacion, se habilita o apaga la camara AR: solo la calibracion del plato y la vista
+/// Router de pantallas de NutriAR. Los paneles existen en la jerarquia del Canvas: solo se
+/// conmutan con SetActive (cero instanciacion en runtime) y, en el mismo punto unico de
+/// conmutacion, se habilita o apaga la camara AR: solo la calibracion del plato y la vista
 /// AR necesitan el mundo fisico; el resto de pantallas se dibujan sobre fondo estatico.
+/// Tambien gobierna el tutorial de 4 pasos, que es una capa modal que no participa del router.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class MenuController : MonoBehaviour
@@ -15,10 +17,24 @@ public sealed class MenuController : MonoBehaviour
     [SerializeField] private GameObject panelPerfil;        // Panel_Perfil
     [SerializeField] private GameObject panelAR;            // Panel_AR (contiene PanelSuperior y PanelInferior)
     [SerializeField] private GameObject panelCalibracion;   // Panel_CalibracionPlato
-    [SerializeField] private GameObject panelGuia;          // Panel_GuiaNutricional
+    [SerializeField] private GameObject panelGuia;          // Panel_GuiaNutricional (catalogo por tarjetas)
+    [SerializeField] private GameObject panelDashboard;     // Panel_DashboardMetas
 
     [Header("Camara AR")]
     [SerializeField] private ARCameraController arCameraController;
+
+    [Header("Catalogo por tarjetas")]
+    [Tooltip("Se avisa al abrir el catalogo para que cierre el sub-panel de detalle anterior.")]
+    [SerializeField] private ARUIManager arUI;
+
+    [Header("Tutorial de inicio (capa modal)")]
+    [Tooltip("Panel_Tutorial: se abre y se cierra con SetActive, sin tocar el router de pantallas.")]
+    [SerializeField] private GameObject panelTutorial;
+    [Tooltip("Los 4 pasos creados en la jerarquia: Forma > Tamano > Fijar > Servir.")]
+    [SerializeField] private GameObject[] pasosTutorial = new GameObject[4];
+    [SerializeField] private TMP_Text indicadorTutorial;
+
+    private int _pasoTutorial;
 
     private void Start()
     {
@@ -27,6 +43,9 @@ public sealed class MenuController : MonoBehaviour
             enabled = false;
             return;
         }
+
+        // El tutorial arranca cerrado y en su primer paso.
+        CerrarTutorial();
 
         // El panel que este visible al cargar la escena decide el estado inicial de la camara.
         ActualizarCamaraAR(PanelActivo());
@@ -44,8 +63,19 @@ public sealed class MenuController : MonoBehaviour
     /// <summary>Perfil biometrico (sin camara AR).</summary>
     public void MostrarPerfil() => ActivarPanel(panelPerfil);
 
-    /// <summary>Guia nutricional / catalogo educativo (sin camara AR).</summary>
-    public void MostrarGuia() => ActivarPanel(panelGuia);
+    /// <summary>Catalogo por tarjetas (sin camara AR). Cierra cualquier detalle abierto antes.</summary>
+    public void MostrarGuia()
+    {
+        if (arUI != null)
+        {
+            arUI.CerrarDetalle();
+        }
+
+        ActivarPanel(panelGuia);
+    }
+
+    /// <summary>Dashboard de metas: agua, energia y macronutrientes (sin camara AR).</summary>
+    public void MostrarMetas() => ActivarPanel(panelDashboard);
 
     /// <summary>Vista AR de seleccion y porciones (camara AR activa).</summary>
     public void MostrarAR() => ActivarPanel(panelAR);
@@ -62,6 +92,81 @@ public sealed class MenuController : MonoBehaviour
         MostrarMenuPrincipal();
     }
 
+    /// <summary>Abre el tutorial de bienvenida por el primer paso.</summary>
+    public void AbrirTutorial()
+    {
+        if (panelTutorial == null)
+        {
+            return;
+        }
+
+        _pasoTutorial = 0;
+        panelTutorial.SetActive(true);
+        RefrescarTutorial();
+    }
+
+    /// <summary>Cierra el tutorial (el boton de ayuda lo reabre cuando haga falta).</summary>
+    public void CerrarTutorial()
+    {
+        if (panelTutorial != null && panelTutorial.activeSelf)
+        {
+            panelTutorial.SetActive(false);
+        }
+    }
+
+    /// <summary>Paso siguiente del tutorial.</summary>
+    public void TutorialSiguiente()
+    {
+        if (pasosTutorial == null || pasosTutorial.Length == 0)
+        {
+            return;
+        }
+
+        _pasoTutorial = Mathf.Min(_pasoTutorial + 1, pasosTutorial.Length - 1);
+        RefrescarTutorial();
+    }
+
+    /// <summary>Paso anterior del tutorial.</summary>
+    public void TutorialAnterior()
+    {
+        if (pasosTutorial == null || pasosTutorial.Length == 0)
+        {
+            return;
+        }
+
+        _pasoTutorial = Mathf.Max(_pasoTutorial - 1, 0);
+        RefrescarTutorial();
+    }
+
+    /// <summary>Enciende solo el paso actual y actualiza el indicador "1 / 4".</summary>
+    private void RefrescarTutorial()
+    {
+        if (pasosTutorial != null)
+        {
+            for (int i = 0; i < pasosTutorial.Length; i++)
+            {
+                GameObject paso = pasosTutorial[i];
+
+                if (paso == null)
+                {
+                    continue;
+                }
+
+                bool debeEstarActivo = i == _pasoTutorial;
+
+                if (paso.activeSelf != debeEstarActivo)
+                {
+                    paso.SetActive(debeEstarActivo);
+                }
+            }
+
+            if (indicadorTutorial != null && pasosTutorial.Length > 0)
+            {
+                indicadorTutorial.text = (_pasoTutorial + 1) + " / " + pasosTutorial.Length;
+            }
+        }
+    }
+
     /// <summary>Enciende el panel indicado, apaga el resto y ajusta la camara AR.</summary>
     private void ActivarPanel(GameObject panelActivo)
     {
@@ -71,6 +176,7 @@ public sealed class MenuController : MonoBehaviour
         Conmutar(panelAR, panelActivo);
         Conmutar(panelCalibracion, panelActivo);
         Conmutar(panelGuia, panelActivo);
+        Conmutar(panelDashboard, panelActivo);
 
         ActualizarCamaraAR(panelActivo);
     }
@@ -122,6 +228,11 @@ public sealed class MenuController : MonoBehaviour
             return panelGuia;
         }
 
+        if (panelDashboard != null && panelDashboard.activeSelf)
+        {
+            return panelDashboard;
+        }
+
         if (panelAR != null && panelAR.activeSelf)
         {
             return panelAR;
@@ -155,6 +266,7 @@ public sealed class MenuController : MonoBehaviour
         valido &= Validar(panelAR, nameof(panelAR));
         valido &= Validar(panelCalibracion, nameof(panelCalibracion));
         valido &= Validar(panelGuia, nameof(panelGuia));
+        valido &= Validar(panelDashboard, nameof(panelDashboard));
 
         if (arCameraController == null)
         {
