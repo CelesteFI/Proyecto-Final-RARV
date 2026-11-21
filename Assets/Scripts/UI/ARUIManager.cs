@@ -478,9 +478,21 @@ public sealed class ARUIManager : MonoBehaviour
 
         if (detalleIcono != null)
         {
-            detalleIcono.color = catalog != null && catalog.TryGetColor(nombre, cocido, out Color color)
-                ? color
-                : colorPorDefecto;
+            // El icono del catalogo es una imagen real del alimento: se muestra tal cual. El color
+            // del catalogo solo se usa mientras el alimento no tenga sprite asignado.
+            Sprite miniatura = MiniaturaDeAlimento(nombre);
+
+            if (miniatura != null)
+            {
+                detalleIcono.sprite = miniatura;
+                detalleIcono.color = Color.white;
+            }
+            else
+            {
+                detalleIcono.color = catalog != null && catalog.TryGetColor(nombre, cocido, out Color color)
+                    ? color
+                    : colorPorDefecto;
+            }
         }
 
         if (!FoodNutritionData.TryGetNutrition(nombre, out FoodNutrition info))

@@ -39,6 +39,9 @@ public sealed class MenuController : MonoBehaviour
     // Pantalla desde la que se abrio el dashboard de metas: decide adonde vuelve su boton Volver.
     private GameObject _origenMetas;
 
+    // Pantalla desde la que se abrio el catalogo: su boton Volver regresa ahi (AR o menu principal).
+    private GameObject _origenGuia;
+
     private void Start()
     {
         if (!ValidarReferencias())
@@ -66,7 +69,10 @@ public sealed class MenuController : MonoBehaviour
     /// <summary>Perfil biometrico (sin camara AR).</summary>
     public void MostrarPerfil() => ActivarPanel(panelPerfil);
 
-    /// <summary>Catalogo por tarjetas (sin camara AR). Cierra cualquier detalle abierto antes.</summary>
+    /// <summary>
+    /// Catalogo por tarjetas (sin camara AR). Cierra cualquier detalle abierto antes y recuerda la
+    /// pantalla de origen para que su boton Volver sea contextual.
+    /// </summary>
     public void MostrarGuia()
     {
         if (arUI != null)
@@ -74,7 +80,31 @@ public sealed class MenuController : MonoBehaviour
             arUI.CerrarDetalle();
         }
 
+        GameObject actual = PanelActivo();
+
+        if (actual != panelGuia)
+        {
+            _origenGuia = actual;
+        }
+
         ActivarPanel(panelGuia);
+    }
+
+    /// <summary>
+    /// Boton Volver del catalogo: regresa a la pantalla desde la que se abrio. Abierto desde la vista
+    /// AR con el plato fijado, se vuelve al Panel_AR con el plato y la comida intactos (no se
+    /// reinicia el anclaje ni la calibracion); abierto desde el menu principal, se vuelve a el.
+    /// </summary>
+    public void VolverDesdeGuia()
+    {
+        GameObject destino = _origenGuia;
+
+        if (destino == null || destino == panelGuia)
+        {
+            destino = panelMenuLateral;
+        }
+
+        ActivarPanel(destino);
     }
 
     /// <summary>
